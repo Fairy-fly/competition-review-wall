@@ -1,0 +1,12 @@
+{
+  "name": "competition-review-wall",
+  "private": true,
+  "description": "竞赛队友测评墙 - 高校竞赛组队匿名评价系统",
+  "scripts": {
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "db:init": "cd backend && npm run db:init",
+    "start": "cd backend && npm start"
+  }
+}
