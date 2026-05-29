@@ -6,6 +6,7 @@ const pool = mysql.createPool({
   user: process.env.MYSQLUSER || process.env.DB_USER || "root",
   password: process.env.MYSQLPASSWORD || process.env.DB_PASSWORD || "",
   database: process.env.MYSQLDATABASE || process.env.DB_NAME || "competition_review_wall",
+  charset: "utf8mb4",
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,

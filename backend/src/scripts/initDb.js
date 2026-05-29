@@ -16,6 +16,7 @@ async function run() {
     port,
     user,
     password,
+    database,
     multipleStatements: true
   });
 
@@ -23,11 +24,16 @@ async function run() {
     const schemaPath = path.join(__dirname, "../../sql/schema.sql");
     const seedPath = path.join(__dirname, "../../sql/seed.sql");
 
-    const schemaSql = fs.readFileSync(schemaPath, "utf8");
-    const seedSql = fs.readFileSync(seedPath, "utf8");
+    let schemaSql = fs.readFileSync(schemaPath, "utf8");
+    let seedSql = fs.readFileSync(seedPath, "utf8");
+
+    // Remove CREATE DATABASE and USE statements for cloud MySQL (DB already exists)
+    schemaSql = schemaSql
+      .replace(/CREATE\s+DATABASE\s+IF\s+NOT\s+EXISTS\s+\S+[^;]*;\s*/gi, "")
+      .replace(/USE\s+\S+;\s*/gi, "");
+    seedSql = seedSql.replace(/USE\s+\S+;\s*/gi, "");
 
     await connection.query(schemaSql);
-    await connection.changeUser({ database });
     await connection.query(seedSql);
 
     console.log("Database schema and seed data applied successfully.");
