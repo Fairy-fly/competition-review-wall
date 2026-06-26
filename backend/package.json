@@ -4,7 +4,6 @@
   "description": "Backend for the competition teammate review wall demo",
   "main": "src/server.js",
   "scripts": {
-    "postinstall": "cd ../frontend && npm install && npm run build",
     "db:init": "node src/scripts/initDb.js",
     "dev": "node --watch src/server.js",
     "start": "NODE_ENV=production node src/server.js"

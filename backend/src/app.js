@@ -17,9 +17,15 @@ const { sendSuccess } = require("./utils/response");
 
 const app = express();
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:3009",
+  process.env.FRONTEND_URL
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: true,
+    origin: allowedOrigins.length ? allowedOrigins : true,
     credentials: true
   })
 );
