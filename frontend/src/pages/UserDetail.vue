@@ -58,6 +58,18 @@
           <div class="muted-text tag-note">反复出现的标签代表更稳定的协作印象。</div>
           <TagList :tags="profile.topTags" show-count />
         </div>
+
+        <div class="section-block">
+          <strong>适合角色</strong>
+          <div class="muted-text tag-note">根据技能方向和标签综合推断，仅供参考。</div>
+          <div v-if="suitableRoles.length" class="role-list">
+            <div v-for="r in suitableRoles" :key="r.role" class="role-chip">
+              <span class="role-name">{{ r.role }}</span>
+              <span class="role-reason">{{ r.reason }}</span>
+            </div>
+          </div>
+          <div v-else class="muted-text">暂未积累足够数据推断适合角色</div>
+        </div>
       </section>
     </div>
 
@@ -118,18 +130,42 @@
           <div class="muted-text">仅显示正常状态评价；管理员隐藏后这里会同步消失。</div>
         </div>
       </div>
-      <ReviewList :reviews="profile.recentReviews" />
+      <ReviewList :reviews="profile.recentReviews" :show-appeal="profile.viewer.isSelf" @appeal="showAppealDialog" />
     </section>
+
+    <!-- 申诉弹窗 -->
+    <el-dialog v-model="appealDialogVisible" title="申请申诉" width="460px" :close-on-click-modal="false">
+      <el-form label-width="80px">
+        <el-form-item label="评价 ID">
+          <span>{{ appealForm.reviewId }}</span>
+        </el-form-item>
+        <el-form-item label="申诉理由" required>
+          <el-input
+            v-model="appealForm.reason"
+            type="textarea"
+            :rows="4"
+            maxlength="500"
+            show-word-limit
+            placeholder="请说明你认为该评价存在问题的具体原因，例如：与事实不符、表述偏颇、缺乏具体事例等。"
+          />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="appealDialogVisible = false">取消</el-button>
+        <el-button type="primary" :loading="appealSubmitting" @click="submitAppeal">提交申诉</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from "vue";
+import { computed, onMounted, reactive, ref } from "vue";
 import { ElMessage } from "element-plus";
 import { useRoute, useRouter } from "vue-router";
 
 import { getProfile } from "@/api/profileApi";
 import { addFavorite, removeFavorite } from "@/api/userApi";
+import { createAppeal } from "@/api/appealApi";
 import RadarChart from "@/components/RadarChart.vue";
 import ReviewList from "@/components/ReviewList.vue";
 import ScoreCard from "@/components/ScoreCard.vue";
@@ -139,6 +175,12 @@ const RECENT_KEY = "competition_review_wall_recent_profiles";
 const route = useRoute();
 const router = useRouter();
 const favoriteLoading = ref(false);
+const appealDialogVisible = ref(false);
+const appealSubmitting = ref(false);
+const appealForm = reactive({
+  reviewId: null,
+  reason: ""
+});
 const profile = reactive({
   user: {},
   summary: {},
@@ -161,6 +203,36 @@ const statusMap = {
 function statusText(status) {
   return statusMap[status] || status || "-";
 }
+
+function inferRoles(skillDirection, topTags) {
+  const roles = [];
+  const direction = (skillDirection || "").toLowerCase();
+  const tagNames = (topTags || []).map((t) => t.name);
+
+  if (direction.includes("前端")) roles.push({ role: "前端开发", reason: "技能方向为前端" });
+  if (direction.includes("后端") || direction.includes("服务端")) roles.push({ role: "后端开发", reason: "技能方向为后端" });
+  if (direction.includes("算法") || direction.includes("建模") || direction.includes("数据")) roles.push({ role: "算法建模", reason: "技能方向涉及算法/建模" });
+  if (direction.includes("产品") || direction.includes("设计") || direction.includes("ui")) roles.push({ role: "产品设计", reason: "技能方向为产品/设计" });
+  if (direction.includes("文档")) roles.push({ role: "文档撰写", reason: "技能方向为文档" });
+  if (direction.includes("ai") || direction.includes("人工智能") || direction.includes("机器学习")) roles.push({ role: "AI/机器学习", reason: "技能方向涉及AI" });
+  if (direction.includes("全栈")) roles.push({ role: "全栈开发", reason: "技能方向为全栈" });
+
+  if (tagNames.includes("creative_ideas")) roles.push({ role: "创意担当", reason: "多次被评价为有创意" });
+  if (tagNames.includes("strong_documentation") || tagNames.includes("presentation_ready")) roles.push({ role: "文档答辩", reason: "标签显示文档/答辩能力强" });
+  if (tagNames.includes("reliable") || tagNames.includes("strong_execution")) roles.push({ role: "组织协调", reason: "标签显示可靠/执行力强" });
+  if (tagNames.includes("smooth_communication")) roles.push({ role: "沟通桥梁", reason: "标签显示沟通顺畅" });
+
+  const seen = new Set();
+  return roles.filter((r) => {
+    if (seen.has(r.role)) return false;
+    seen.add(r.role);
+    return true;
+  });
+}
+
+const suitableRoles = computed(() =>
+  inferRoles(profile.user?.skillDirection, profile.topTags)
+);
 
 function rememberProfile() {
   if (!profile.user?.id) {
@@ -212,6 +284,31 @@ async function toggleFavorite() {
   }
 }
 
+function showAppealDialog(reviewId) {
+  appealForm.reviewId = reviewId;
+  appealForm.reason = "";
+  appealDialogVisible.value = true;
+}
+
+async function submitAppeal() {
+  const reason = appealForm.reason.trim();
+  if (!reason) {
+    ElMessage.warning("请填写申诉理由");
+    return;
+  }
+
+  appealSubmitting.value = true;
+  try {
+    await createAppeal({ reviewId: appealForm.reviewId, reason });
+    appealDialogVisible.value = false;
+    ElMessage.success("申诉已提交，管理员会尽快处理");
+  } catch (error) {
+    ElMessage.error(error.message);
+  } finally {
+    appealSubmitting.value = false;
+  }
+}
+
 onMounted(async () => {
   if (route.query.reviewSubmitted === "1") {
     ElMessage.success("本次评价已计入画像");
@@ -246,43 +343,80 @@ onMounted(async () => {
 
 .mini-list {
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
 
 .mini-row {
   width: 100%;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  background: #fff;
-  padding: 10px 12px;
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  padding: 10px 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
   text-align: left;
   cursor: pointer;
-}
-
-.mini-row strong,
-.mini-row small {
-  display: block;
-}
-
-.mini-row small {
-  margin-top: 2px;
-  color: #64748b;
-  font-size: 12px;
+  transition: border-color var(--transition-fast);
 }
 
 .mini-row:hover {
-  border-color: #2563eb;
+  border-color: var(--color-brand);
+}
+
+.mini-row strong {
+  display: block;
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+.mini-row small {
+  display: block;
+  margin-top: 2px;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
 }
 
 .explain-list {
   margin: 0;
   padding-left: 18px;
-  color: #475569;
-  line-height: 1.9;
-  font-size: 14px;
+  color: var(--color-text-secondary);
+  line-height: 2;
+  font-size: var(--font-size-base);
+}
+
+.role-list {
+  display: grid;
+  gap: 8px;
+}
+
+.role-chip {
+  border: 1px solid var(--color-brand-light);
+  border-radius: var(--radius-sm);
+  background: var(--color-brand-light);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.role-name {
+  font-weight: 600;
+  color: var(--color-brand-dark);
+  font-size: var(--font-size-base);
+}
+
+.role-reason {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.empty-placeholder {
+  padding: 36px 12px;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-base);
 }
 </style>

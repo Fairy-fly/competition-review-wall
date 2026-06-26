@@ -3,6 +3,7 @@ const express = require("express");
 const path = require("path");
 
 const adminRoutes = require("./routes/adminRoutes");
+const appealRoutes = require("./routes/appealRoutes");
 const authRoutes = require("./routes/authRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const profileRoutes = require("./routes/profileRoutes");
@@ -38,6 +39,7 @@ app.use("/api/reviews", reviewRoutes);
 app.use("/api/tags", tagRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/appeals", appealRoutes);
 
 if (process.env.NODE_ENV === "production") {
   const frontendDist = path.join(__dirname, "../../frontend/dist");

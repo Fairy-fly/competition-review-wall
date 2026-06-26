@@ -9,6 +9,7 @@ import ProjectCreate from "@/pages/ProjectCreate.vue";
 import ProjectDetail from "@/pages/ProjectDetail.vue";
 import ProjectList from "@/pages/ProjectList.vue";
 import Register from "@/pages/Register.vue";
+import Recommend from "@/pages/Recommend.vue";
 import ReviewCreate from "@/pages/ReviewCreate.vue";
 import UserDetail from "@/pages/UserDetail.vue";
 import { useUserStore } from "@/store/user";
@@ -35,6 +36,7 @@ const routes = [
       { path: "projects/create", component: ProjectCreate },
       { path: "projects/:id", component: ProjectDetail },
       { path: "reviews/create", component: ReviewCreate },
+      { path: "recommend", component: Recommend },
       { path: "users/:id", component: UserDetail },
       { path: "admin", component: AdminDashboard, meta: { requiresAdmin: true } }
     ]
@@ -43,7 +45,24 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition;
+    }
+    return { top: 0, left: 0 };
+  }
+});
+
+router.afterEach(() => {
+  // Also scroll .app-content in case scrollBehavior targets window
+  requestAnimationFrame(() => {
+    const main = document.querySelector(".app-content");
+    if (main) {
+      main.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    }
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  });
 });
 
 router.beforeEach(async (to) => {

@@ -1,28 +1,101 @@
 <template>
-  <div class="auth-page">
-    <section class="auth-surface">
-      <div class="auth-header">
-        <h1>竞赛队友测评墙</h1>
-        <p>先登录，再把竞赛协作的真实口碑串起来。</p>
-      </div>
+  <div class="login-page">
+    <!-- Animated background layers -->
+    <div class="login-bg">
+      <div class="bg-orb bg-orb-1"></div>
+      <div class="bg-orb bg-orb-2"></div>
+      <div class="bg-orb bg-orb-3"></div>
+      <div class="bg-line bg-line-1"></div>
+      <div class="bg-line bg-line-2"></div>
+    </div>
 
-      <el-form :model="form" @submit.prevent="handleLogin">
-        <el-form-item label="学号">
-          <el-input v-model="form.studentNo" placeholder="请输入学号" />
-        </el-form-item>
-        <el-form-item label="密码">
-          <el-input v-model="form.password" type="password" show-password placeholder="请输入密码" />
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" class="auth-submit" :loading="loading" @click="handleLogin">登录</el-button>
-        </el-form-item>
-      </el-form>
+    <div class="login-shell">
+      <!-- Left: Showcase -->
+      <section class="login-showcase">
+        <div class="showcase-brand">
+          <div class="brand-mark">CW</div>
+          <div class="brand-text">
+            <strong>竞赛队友测评墙</strong>
+            <span>课程设计 Demo</span>
+          </div>
+        </div>
 
-      <div class="auth-footer">
-        <span>还没有账号？</span>
-        <router-link to="/register">去注册</router-link>
-      </div>
-    </section>
+        <h1 class="showcase-title">让竞赛组队<br />不再只靠感觉</h1>
+        <p class="showcase-desc">通过匿名互评、协作画像和队友推荐，帮助同学在组队前了解真实协作风格，减少磨合成本。</p>
+
+        <!-- Feature cards -->
+        <div class="feature-list">
+          <div class="feature-card" style="animation-delay:0ms">
+            <div class="feature-icon" style="background:rgba(79,99,246,0.08);color:var(--primary)">
+              <el-icon :size="22"><Hide /></el-icon>
+            </div>
+            <div>
+              <strong>匿名互评</strong>
+              <p>评价对外显示为"匿名队友"，降低人情压力，让反馈更真实。</p>
+            </div>
+          </div>
+          <div class="feature-card" style="animation-delay:140ms">
+            <div class="feature-icon" style="background:rgba(15,118,110,0.08);color:var(--teal)">
+              <el-icon :size="22"><DataAnalysis /></el-icon>
+            </div>
+            <div>
+              <strong>协作画像</strong>
+              <p>自动汇总评分、标签、再次组队率和项目经历，形成可参考画像。</p>
+            </div>
+          </div>
+          <div class="feature-card" style="animation-delay:280ms">
+            <div class="feature-icon" style="background:rgba(217,119,6,0.08);color:var(--amber)">
+              <el-icon :size="22"><Connection /></el-icon>
+            </div>
+            <div>
+              <strong>队友推荐</strong>
+              <p>根据技能方向和协作标签，找到更适合一起参赛的同学。</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats row -->
+        <div class="stats-row">
+          <div class="stat-pill"><span class="stat-pill-num">5</span><span class="stat-pill-label">学生画像</span></div>
+          <div class="stat-pill"><span class="stat-pill-num">7</span><span class="stat-pill-label">有效评价</span></div>
+          <div class="stat-pill"><span class="stat-pill-num">4.14</span><span class="stat-pill-label">平台均分</span></div>
+          <div class="stat-pill"><span class="stat-pill-num">3</span><span class="stat-pill-label">竞赛项目</span></div>
+        </div>
+      </section>
+
+      <!-- Right: Login card -->
+      <section class="login-panel-wrap">
+        <div class="login-card">
+          <div class="login-card-head">
+            <h2>欢迎回来</h2>
+            <p>登录后查看你的竞赛协作画像与待评价项目。</p>
+          </div>
+
+          <el-form :model="form" @submit.prevent="handleLogin">
+            <div class="input-group">
+              <label class="input-label">学号</label>
+              <el-input v-model="form.studentNo" placeholder="请输入学号" size="large" :prefix-icon="UserFilled" />
+            </div>
+            <div class="input-group">
+              <label class="input-label">密码</label>
+              <el-input v-model="form.password" type="password" show-password placeholder="请输入密码" size="large" :prefix-icon="Lock" />
+            </div>
+            <el-button type="primary" size="large" class="login-btn" :loading="loading" @click="handleLogin">
+              登录
+            </el-button>
+          </el-form>
+
+          <div class="login-card-foot">
+            <span>还没有账号？<router-link to="/register">去注册</router-link></span>
+          </div>
+
+          <div class="login-card-note">
+            <el-icon :size="14"><InfoFilled /></el-icon>
+            <span>普通用户只看到匿名评价，管理员保留完整记录用于争议追溯。</span>
+          </div>
+        </div>
+      </section>
+    </div>
   </div>
 </template>
 
@@ -30,7 +103,7 @@
 import { reactive, ref } from "vue";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
-
+import { Hide, DataAnalysis, Connection, UserFilled, Lock, InfoFilled } from "@element-plus/icons-vue";
 import { useUserStore } from "@/store/user";
 
 const router = useRouter();
@@ -57,46 +130,140 @@ async function handleLogin() {
 </script>
 
 <style scoped>
-.auth-page {
+.login-page {
   min-height: 100vh;
-  display: grid;
-  place-items: center;
-  padding: 20px;
-  background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 40%, #dbeafe 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(150deg, #f0f4ff 0%, #f8fafd 35%, #f0f7f6 70%, #f5f3ff 100%);
 }
 
-.auth-surface {
-  width: min(100%, 440px);
-  background: rgba(255, 255, 255, 0.96);
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  border-radius: 8px;
-  padding: 30px;
-  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+/* ---- Animated background ---- */
+.login-bg { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+.bg-orb {
+  position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.45;
+}
+.bg-orb-1 { width: 420px; height: 420px; background: rgba(79,99,246,0.10); top: -8%; left: 5%; animation: orbFloat 12s ease-in-out infinite; }
+.bg-orb-2 { width: 340px; height: 340px; background: rgba(15,118,110,0.08); bottom: 10%; right: -4%; animation: orbFloat 14s ease-in-out infinite reverse; }
+.bg-orb-3 { width: 240px; height: 240px; background: rgba(217,119,6,0.06); top: 50%; left: 50%; animation: orbFloat 16s ease-in-out infinite; }
+.bg-line {
+  position: absolute; height: 2px; width: 200px;
+  background: linear-gradient(90deg, transparent, rgba(79,99,246,0.10), transparent);
+  animation: flowLine 8s ease-in-out infinite;
+}
+.bg-line-1 { top: 25%; left: 60%; animation-delay: 0s; }
+.bg-line-2 { top: 58%; left: 10%; animation-delay: 4s; width: 260px; }
+
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(20px, -30px) scale(1.04); }
+  66% { transform: translate(-15px, 20px) scale(0.96); }
+}
+@keyframes flowLine {
+  0% { transform: translateX(-60px); opacity: 0.1; }
+  50% { opacity: 0.35; }
+  100% { transform: translateX(60px); opacity: 0.1; }
 }
 
-.auth-header h1 {
-  margin: 0;
-  font-size: 30px;
-  color: #111827;
+/* ---- Shell ---- */
+.login-shell {
+  position: relative; z-index: 1;
+  display: flex; gap: 0;
+  width: min(100%, 1060px);
+  min-height: 620px;
+  background: rgba(255,255,255,0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-hover);
+  overflow: hidden;
 }
 
-.auth-header p {
-  margin: 10px 0 24px;
-  color: #64748b;
+/* ---- Left Showcase ---- */
+.login-showcase {
+  flex: 11;
+  padding: 44px 48px;
+  display: flex; flex-direction: column; justify-content: center;
+  background: linear-gradient(160deg, rgba(248,250,255,0.9) 0%, rgba(255,255,255,0.6) 100%);
+  border-right: 1px solid var(--border-soft);
 }
 
-.auth-submit {
-  width: 100%;
+.showcase-brand { display: flex; align-items: center; gap: 14px; margin-bottom: 32px; }
+.brand-mark { width: 44px; height: 44px; border-radius: 10px; background: var(--primary); display: grid; place-items: center; color: #fff; font-weight: 700; font-size: 18px; flex-shrink: 0; }
+.brand-text { display: flex; flex-direction: column; gap: 2px; }
+.brand-text strong { font-size: 17px; color: var(--text-main); }
+.brand-text span { font-size: 12px; color: var(--text-faint); }
+
+.showcase-title { margin: 0; font-size: 38px; font-weight: 750; color: var(--text-main); letter-spacing: -1px; line-height: 1.25; }
+.showcase-desc { margin: 18px 0 0; color: var(--text-muted); font-size: 15px; line-height: 1.8; max-width: 480px; }
+
+/* Feature cards */
+.feature-list { display: grid; gap: 12px; margin-top: 32px; }
+.feature-card {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 15px 18px;
+  border: 1px solid var(--border-soft); border-radius: var(--radius-md);
+  background: rgba(255,255,255,0.6);
+  animation: fadeUp 500ms ease both;
+  transition: all var(--transition-base);
+}
+.feature-card:hover { border-color: var(--primary); box-shadow: var(--shadow-sm); transform: translateX(4px); }
+.feature-card strong { display: block; font-size: 15px; color: var(--text-main); margin-bottom: 3px; }
+.feature-card p { margin: 0; font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+.feature-icon { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; flex-shrink: 0; border: 1px solid rgba(0,0,0,0.06); }
+
+/* Stats */
+.stats-row { display: flex; gap: 28px; margin-top: 32px; }
+.stat-pill { display: flex; flex-direction: column; gap: 3px; }
+.stat-pill-num { font-size: 30px; font-weight: 700; color: var(--primary); letter-spacing: -0.5px; }
+.stat-pill-label { font-size: 12px; color: var(--text-faint); }
+
+/* ---- Right: Login Card ---- */
+.login-panel-wrap {
+  flex: 9;
+  display: flex; align-items: center; justify-content: center; padding: 44px 48px;
+}
+.login-card {
+  width: 100%; max-width: 380px;
+  animation: fadeUp 520ms ease both;
+}
+.login-card-head { margin-bottom: 32px; }
+.login-card-head h2 { margin: 0; font-size: 28px; font-weight: 700; color: var(--text-main); letter-spacing: -0.4px; }
+.login-card-head p { margin: 8px 0 0; color: var(--text-muted); font-size: 14px; }
+
+.input-group { margin-bottom: 18px; }
+.input-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
+
+.login-btn { width: 100%; margin-top: 6px; height: 46px; font-size: 16px; font-weight: 600; border-radius: var(--radius-md) !important; transition: all var(--transition-base); }
+.login-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(79,99,246,0.28); }
+.login-btn:active { transform: translateY(0); }
+
+.login-card-foot { text-align: center; margin-top: 16px; font-size: 14px; color: var(--text-muted); }
+.login-card-foot a { color: var(--primary); font-weight: 600; margin-left: 6px; }
+.login-card-note { display: flex; align-items: center; gap: 8px; margin-top: 24px; padding: 12px 16px; border-radius: var(--radius-sm); background: var(--surface-soft); font-size: 13px; color: var(--text-faint); }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-.auth-footer {
-  margin-top: 8px;
-  color: #64748b;
+/* Mobile */
+@media (max-width: 860px) {
+  .login-page { padding: 0; }
+  .login-shell { flex-direction: column; min-height: auto; border-radius: 0; }
+  .login-showcase { padding: 32px 28px; border-right: none; border-bottom: 1px solid var(--border-soft); }
+  .showcase-title { font-size: 28px; }
+  .feature-list { margin-top: 24px; }
+  .stats-row { margin-top: 24px; gap: 18px; }
+  .stat-pill-num { font-size: 24px; }
+  .login-panel-wrap { padding: 32px 28px; }
 }
 
-.auth-footer a {
-  margin-left: 6px;
-  color: #2563eb;
+@media (prefers-reduced-motion: reduce) {
+  .bg-orb, .bg-line, .feature-card, .login-card { animation: none !important; }
 }
 </style>
-

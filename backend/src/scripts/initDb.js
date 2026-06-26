@@ -49,6 +49,31 @@ async function run() {
       await connection.query("ALTER TABLE reviews ADD COLUMN hidden_reason VARCHAR(255) NULL AFTER status");
     }
 
+    // Ensure appeals table exists for old databases
+    const [appealsTable] = await connection.query(
+      `SELECT TABLE_NAME
+       FROM INFORMATION_SCHEMA.TABLES
+       WHERE TABLE_SCHEMA = DATABASE()
+         AND TABLE_NAME = 'appeals'`
+    );
+
+    if (!appealsTable.length) {
+      await connection.query(`
+        CREATE TABLE IF NOT EXISTS appeals (
+          id BIGINT PRIMARY KEY AUTO_INCREMENT,
+          review_id BIGINT NOT NULL,
+          appellant_user_id BIGINT NOT NULL,
+          reason TEXT NOT NULL,
+          status VARCHAR(20) NOT NULL DEFAULT 'pending',
+          admin_reply TEXT NULL,
+          created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+          CONSTRAINT fk_appeal_review FOREIGN KEY (review_id) REFERENCES reviews(id) ON DELETE CASCADE,
+          CONSTRAINT fk_appeal_user FOREIGN KEY (appellant_user_id) REFERENCES users(id) ON DELETE CASCADE
+        )
+      `);
+    }
+
     await connection.query(seedSql);
 
     console.log("Database schema and seed data applied successfully.");

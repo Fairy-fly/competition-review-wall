@@ -136,3 +136,10 @@ VALUES
   (3, 3, 2)
 ON DUPLICATE KEY UPDATE
   target_user_id = VALUES(target_user_id);
+
+INSERT INTO appeals (id, review_id, appellant_user_id, reason, status, admin_reply)
+VALUES
+  (1, 3, 2, '该评价同步不够及时的指责缺乏具体事例支撑，我保留了例会纪要和周报截图，申请重新审核。', 'pending', NULL)
+ON DUPLICATE KEY UPDATE
+  reason = VALUES(reason),
+  status = VALUES(status);

@@ -22,37 +22,45 @@ defineProps({
   },
   accent: {
     type: String,
-    default: "#2563eb"
+    default: "var(--color-brand)"
   }
 });
 </script>
 
 <style scoped>
 .score-card {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-top-width: 4px;
-  border-radius: 8px;
-  padding: 18px;
-  min-height: 112px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-light);
+  border-top-width: 3px;
+  border-radius: var(--radius-md);
+  padding: 20px;
+  transition: box-shadow var(--transition-fast);
+}
+
+.score-card:hover {
+  box-shadow: var(--shadow-md);
 }
 
 .score-label {
-  color: #6b7280;
-  font-size: 13px;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
 }
 
 .score-value {
-  margin-top: 10px;
-  font-size: 28px;
+  margin-top: 8px;
+  font-size: var(--font-size-2xl);
   font-weight: 700;
-  color: #111827;
+  color: var(--color-text-primary);
+  letter-spacing: -0.6px;
+  line-height: 1.1;
 }
 
 .score-hint {
-  margin-top: 8px;
-  color: #94a3b8;
-  font-size: 12px;
+  margin-top: 6px;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
 }
 </style>
-

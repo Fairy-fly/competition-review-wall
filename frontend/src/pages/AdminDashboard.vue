@@ -15,6 +15,25 @@
       <ScoreCard label="无评价用户" :value="overview.usersWithoutReviews" hint="尚未收到任何评价的学生" accent="#d97706" />
     </section>
 
+    <!-- Charts -->
+    <section class="section-block three-col-grid">
+      <div class="section-surface">
+        <div class="panel-title">热门标签 TOP 8</div>
+        <div ref="tagChartRef" class="chart-box"></div>
+        <div v-if="!dashboard.hotTags.length" class="empty-placeholder">暂无数据</div>
+      </div>
+      <div class="section-surface">
+        <div class="panel-title">各专业平均评分</div>
+        <div ref="majorChartRef" class="chart-box"></div>
+        <div v-if="!adminStats.byMajor.length" class="empty-placeholder">暂无数据</div>
+      </div>
+      <div class="section-surface">
+        <div class="panel-title">近 7 天评价趋势</div>
+        <div ref="trendChartRef" class="chart-box"></div>
+        <div v-if="!adminStats.reviewTrend.length" class="empty-placeholder">近 7 天暂无新评价</div>
+      </div>
+    </section>
+
     <section class="section-block section-surface">
       <el-tabs v-model="activeTab" @tab-change="handleTabChange">
         <el-tab-pane label="用户管理" name="users">
@@ -145,6 +164,61 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
+
+        <el-tab-pane label="申诉管理" name="appeals">
+          <div class="surface-actions">
+            <div>
+              <strong>申诉列表</strong>
+              <div class="muted-text">处理学生对评价的申诉：通过则自动隐藏评价，驳回则保留原评价。</div>
+            </div>
+            <el-tag v-if="pendingAppealCount" type="warning">{{ pendingAppealCount }} 条待处理</el-tag>
+          </div>
+
+          <el-table
+            v-loading="loadingAppeals"
+            :data="appeals"
+            stripe
+            empty-text="暂无申诉记录"
+          >
+            <el-table-column prop="id" label="ID" width="60" />
+            <el-table-column prop="appellantName" label="申诉人" width="100" />
+            <el-table-column label="关联评价" min-width="180">
+              <template #default="{ row }">
+                <div>{{ row.projectName }}</div>
+                <div class="muted-text">
+                  评价人：{{ row.reviewerName }} → 被评人：{{ row.revieweeName }} · {{ row.overallScore }} 分
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="reason" label="申诉理由" min-width="200" show-overflow-tooltip />
+            <el-table-column label="状态" width="100">
+              <template #default="{ row }">
+                <el-tag :type="appealStatusType(row.status)" size="small">
+                  {{ appealStatusLabel(row.status) }}
+                </el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="处理回复" min-width="160" show-overflow-tooltip>
+              <template #default="{ row }">
+                <span v-if="row.adminReply">{{ row.adminReply }}</span>
+                <span v-else class="muted-text">-</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="160" fixed="right">
+              <template #default="{ row }">
+                <el-space v-if="row.status === 'pending'">
+                  <el-button type="success" link size="small" @click="showAppealProcessDialog(row, 'approved')">
+                    通过
+                  </el-button>
+                  <el-button type="danger" link size="small" @click="showAppealProcessDialog(row, 'rejected')">
+                    驳回
+                  </el-button>
+                </el-space>
+                <span v-else class="muted-text">已处理</span>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
       </el-tabs>
     </section>
 
@@ -177,15 +251,59 @@
         </el-button>
       </template>
     </el-dialog>
+
+    <!-- Appeal process dialog -->
+    <el-dialog
+      v-model="appealProcessVisible"
+      :title="appealProcessForm.action === 'approved' ? '通过申诉' : '驳回申诉'"
+      width="460px"
+      :close-on-click-modal="false"
+    >
+      <el-alert
+        v-if="appealProcessForm.action === 'approved'"
+        title="通过申诉后，关联评价将被自动隐藏"
+        type="warning"
+        :closable="false"
+        show-icon
+        style="margin-bottom:16px"
+      />
+      <el-form label-width="80px">
+        <el-form-item label="申诉 ID">
+          <span>{{ appealProcessForm.appealId }}</span>
+        </el-form-item>
+        <el-form-item label="处理回复">
+          <el-input
+            v-model="appealProcessForm.reply"
+            type="textarea"
+            :rows="3"
+            maxlength="200"
+            show-word-limit
+            :placeholder="appealProcessForm.action === 'approved' ? '回复申诉人，说明通过原因' : '回复申诉人，说明驳回原因'"
+          />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="appealProcessVisible = false">取消</el-button>
+        <el-button
+          :type="appealProcessForm.action === 'approved' ? 'success' : 'danger'"
+          :loading="processingAppeal"
+          @click="confirmAppealProcess"
+        >
+          {{ appealProcessForm.action === 'approved' ? '确认通过' : '确认驳回' }}
+        </el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from "vue";
+import { computed, nextTick, onMounted, reactive, ref, watch } from "vue";
 import { ElMessage } from "element-plus";
+import * as echarts from "echarts";
 
 import { getAdminProjects, getAdminReviews, getAdminUsers, hideReview } from "@/api/adminApi";
-import { getDashboardSummary } from "@/api/dashboardApi";
+import { getAppeals, processAppeal } from "@/api/appealApi";
+import { getAdminStats, getDashboardSummary } from "@/api/dashboardApi";
 import ReviewList from "@/components/ReviewList.vue";
 import ScoreCard from "@/components/ScoreCard.vue";
 
@@ -195,10 +313,28 @@ const loadingUsers = ref(false);
 const loadingProjects = ref(false);
 const loadingReviews = ref(false);
 const hidingReview = ref(false);
+const loadingAppeals = ref(false);
+const processingAppeal = ref(false);
+
+// Chart refs
+const tagChartRef = ref(null);
+const majorChartRef = ref(null);
+const trendChartRef = ref(null);
+
+const adminStats = reactive({
+  byMajor: [],
+  reviewTrend: [],
+  pendingAppeals: 0
+});
 
 const users = ref([]);
 const projects = ref([]);
 const reviews = ref([]);
+const appeals = ref([]);
+
+const pendingAppealCount = computed(() =>
+  appeals.value.filter((a) => a.status === "pending").length
+);
 
 const overview = reactive({
   totalUsers: 0,
@@ -220,6 +356,13 @@ const hideDialogVisible = ref(false);
 const hideForm = reactive({
   reviewId: null,
   reason: ""
+});
+
+const appealProcessVisible = ref(false);
+const appealProcessForm = reactive({
+  appealId: null,
+  action: "approved",
+  reply: ""
 });
 
 const statusMap = {
@@ -244,11 +387,68 @@ function resetReviewFilters() {
   fetchReviews();
 }
 
+/* ---- Charts ---- */
+function renderTagChart() {
+  if (!tagChartRef.value || !dashboard.hotTags.length) return;
+  const chart = echarts.init(tagChartRef.value);
+  chart.setOption({
+    tooltip: { trigger: "axis" },
+    grid: { left: 100, right: 20, top: 10, bottom: 20 },
+    xAxis: { type: "value" },
+    yAxis: { type: "category", data: dashboard.hotTags.map((t) => t.displayName).reverse(), inverse: true },
+    series: [{ type: "bar", data: dashboard.hotTags.map((t) => t.count).reverse(), itemStyle: { color: "#7c3aed" } }]
+  });
+}
+
+function renderMajorChart() {
+  if (!majorChartRef.value || !adminStats.byMajor.length) return;
+  const chart = echarts.init(majorChartRef.value);
+  chart.setOption({
+    tooltip: { trigger: "axis" },
+    grid: { left: 90, right: 20, top: 10, bottom: 20 },
+    xAxis: { type: "value", max: 5 },
+    yAxis: { type: "category", data: adminStats.byMajor.map((m) => m.major).reverse(), inverse: true },
+    series: [{ type: "bar", data: adminStats.byMajor.map((m) => m.avgScore).reverse(), itemStyle: { color: "#0f766e" } }]
+  });
+}
+
+function renderTrendChart() {
+  if (!trendChartRef.value || !adminStats.reviewTrend.length) return;
+  const chart = echarts.init(trendChartRef.value);
+  chart.setOption({
+    tooltip: { trigger: "axis" },
+    grid: { left: 40, right: 20, top: 10, bottom: 20 },
+    xAxis: { type: "category", data: adminStats.reviewTrend.map((d) => d.date) },
+    yAxis: { type: "value", minInterval: 1 },
+    series: [{ type: "line", data: adminStats.reviewTrend.map((d) => d.count), smooth: true, itemStyle: { color: "#2563eb" } }]
+  });
+}
+
+function renderAllCharts() {
+  nextTick(() => {
+    renderTagChart();
+    renderMajorChart();
+    renderTrendChart();
+  });
+}
+
+async function fetchAdminStats() {
+  try {
+    const res = await getAdminStats();
+    Object.assign(adminStats, res.data);
+  } catch (error) {
+    // non-critical
+  }
+}
+
 /* ---- Data fetching ---- */
 async function fetchOverview() {
   try {
     const res = await getDashboardSummary();
     Object.assign(overview, res.data.overview || {});
+    dashboard.topUsers = res.data.topUsers || [];
+    dashboard.hotTags = res.data.hotTags || [];
+    renderAllCharts();
   } catch (error) {
     // overview is non-critical, degrade gracefully
   }
@@ -322,14 +522,65 @@ async function confirmHide() {
   }
 }
 
+/* ---- Appeals ---- */
+function appealStatusType(status) {
+  return status === "pending" ? "warning" : status === "approved" ? "success" : "info";
+}
+
+function appealStatusLabel(status) {
+  return status === "pending" ? "待处理" : status === "approved" ? "已通过" : "已驳回";
+}
+
+async function fetchAppeals() {
+  loadingAppeals.value = true;
+  try {
+    const res = await getAppeals();
+    appeals.value = res.data || [];
+  } catch (error) {
+    ElMessage.error(error.message || "加载申诉列表失败");
+  } finally {
+    loadingAppeals.value = false;
+  }
+}
+
+function showAppealProcessDialog(row, action) {
+  appealProcessForm.appealId = row.id;
+  appealProcessForm.action = action;
+  appealProcessForm.reply = "";
+  appealProcessVisible.value = true;
+}
+
+async function confirmAppealProcess() {
+  if (!appealProcessForm.reply.trim()) {
+    ElMessage.warning("请填写处理回复");
+    return;
+  }
+
+  processingAppeal.value = true;
+  try {
+    await processAppeal(appealProcessForm.appealId, {
+      status: appealProcessForm.action,
+      adminReply: appealProcessForm.reply.trim()
+    });
+    appealProcessVisible.value = false;
+    ElMessage.success(appealProcessForm.action === "approved" ? "申诉已通过，评价已自动隐藏" : "申诉已驳回");
+    await Promise.all([fetchReviews(), fetchAppeals()]);
+  } catch (error) {
+    ElMessage.error(error.message || "处理失败");
+  } finally {
+    processingAppeal.value = false;
+  }
+}
+
 function handleTabChange(tab) {
   if (tab === "users") fetchUsers();
   else if (tab === "projects") fetchProjects();
   else if (tab === "reviews") fetchReviews();
+  else if (tab === "appeals") fetchAppeals();
 }
 
 onMounted(async () => {
-  await Promise.all([fetchOverview(), fetchUsers()]);
+  await Promise.all([fetchOverview(), fetchUsers(), fetchAdminStats()]);
 });
 </script>
 
@@ -337,5 +588,22 @@ onMounted(async () => {
 .hidden-reason-text {
   color: #991b1b;
   font-size: 13px;
+}
+
+.chart-box {
+  width: 100%;
+  height: 260px;
+}
+
+.panel-title {
+  margin-bottom: 12px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.empty-placeholder {
+  padding: 48px 12px;
+  text-align: center;
+  color: #9ca3af;
 }
 </style>

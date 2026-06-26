@@ -102,3 +102,16 @@ CREATE TABLE IF NOT EXISTS user_favorites (
   CONSTRAINT fk_favorite_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   CONSTRAINT fk_favorite_target FOREIGN KEY (target_user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS appeals (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  review_id BIGINT NOT NULL,
+  appellant_user_id BIGINT NOT NULL,
+  reason TEXT NOT NULL,
+  status VARCHAR(20) NOT NULL DEFAULT 'pending',
+  admin_reply TEXT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_appeal_review FOREIGN KEY (review_id) REFERENCES reviews(id) ON DELETE CASCADE,
+  CONSTRAINT fk_appeal_user FOREIGN KEY (appellant_user_id) REFERENCES users(id) ON DELETE CASCADE
+);

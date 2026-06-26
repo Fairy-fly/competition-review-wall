@@ -20,6 +20,9 @@
         <el-menu-item index="/">
           <span>测评墙</span>
         </el-menu-item>
+        <el-menu-item index="/recommend">
+          <span>队友推荐</span>
+        </el-menu-item>
         <el-menu-item index="/profile">
           <span>个人中心</span>
         </el-menu-item>
@@ -35,7 +38,7 @@
       </el-menu>
     </aside>
 
-    <div class="app-main-area">
+    <div class="app-main-area" :class="{ 'sidebar-collapsed': appStore.collapsed }">
       <header class="app-topbar">
         <div class="topbar-left">
           <span class="mobile-only menu-trigger" @click="drawerVisible = true">&#9776;</span>
@@ -83,6 +86,9 @@
       <el-menu :default-active="route.path" router @select="drawerVisible = false">
         <el-menu-item index="/">
           <span>测评墙</span>
+        </el-menu-item>
+        <el-menu-item index="/recommend">
+          <span>队友推荐</span>
         </el-menu-item>
         <el-menu-item index="/profile">
           <span>个人中心</span>
@@ -135,18 +141,50 @@ function handleLogout() {
 <style scoped>
 .app-layout {
   min-height: 100vh;
-  display: flex;
 }
 
 .app-sidebar {
-  background: #0f172a;
-  width: 220px;
-  transition: width 0.2s ease;
-  flex-shrink: 0;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 50;
+  background: var(--sidebar-bg);
+  width: var(--sidebar-width);
+  transition: width var(--transition-base);
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .app-sidebar.collapsed {
-  width: 72px;
+  width: var(--sidebar-collapsed);
+}
+
+/* Override el-menu in sidebar */
+.app-sidebar :deep(.el-menu) {
+  border-right: none;
+  background: transparent;
+}
+
+.app-sidebar :deep(.el-menu-item) {
+  color: var(--sidebar-text);
+  transition: all var(--transition-base);
+  margin: 2px 8px;
+  border-radius: var(--radius-sm);
+  padding-left: 20px !important;
+}
+
+.app-sidebar :deep(.el-menu-item:hover) {
+  background: var(--sidebar-hover);
+  color: #e2e8f0;
+}
+
+.app-sidebar :deep(.el-menu-item.is-active) {
+  color: #ffffff;
+  background: linear-gradient(90deg, rgba(99,102,241,0.30) 0%, rgba(99,102,241,0.06) 100%);
+  border-left: 3px solid var(--sidebar-active);
 }
 
 .brand-block {
@@ -155,6 +193,7 @@ function handleLogout() {
   gap: 12px;
   padding: 18px 16px;
   color: #fff;
+  flex-shrink: 0;
 }
 
 .brand-mark {
@@ -165,6 +204,7 @@ function handleLogout() {
   display: grid;
   place-items: center;
   font-weight: 700;
+  flex-shrink: 0;
 }
 
 .mobile-brand {
@@ -188,15 +228,26 @@ function handleLogout() {
 }
 
 .app-main-area {
-  flex: 1;
-  min-width: 0;
+  margin-left: var(--sidebar-width);
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  transition: margin-left var(--transition-base);
+}
+
+/* When sidebar is collapsed, reduce the margin */
+.app-main-area.sidebar-collapsed {
+  margin-left: var(--sidebar-collapsed);
 }
 
 .app-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
   height: 72px;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid #e5e7eb;
   display: flex;
   align-items: center;
@@ -285,11 +336,23 @@ function handleLogout() {
 }
 
 @media (max-width: 768px) {
-  .app-layout {
-    flex-direction: column;
+  .app-sidebar {
+    position: static;
+    width: 0;
+    overflow: hidden;
+  }
+
+  .app-sidebar.collapsed {
+    width: 0;
+  }
+
+  .app-main-area {
+    margin-left: 0 !important;
   }
 
   .app-topbar {
+    position: sticky;
+    top: 0;
     padding: 0 14px;
     height: 60px;
   }

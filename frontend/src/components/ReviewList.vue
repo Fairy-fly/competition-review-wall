@@ -22,6 +22,11 @@
       <p class="review-comment">{{ review.comment || "这条评价没有填写文字内容。" }}</p>
       <p v-if="adminMode && review.hiddenReason" class="review-reason">隐藏原因：{{ review.hiddenReason }}</p>
       <TagList :tags="review.tags" />
+      <div v-if="showAppeal && review.status === 'normal'" style="margin-top:10px">
+        <el-button type="warning" link size="small" @click="$emit('appeal', review.id)">
+          申请申诉
+        </el-button>
+      </div>
     </article>
   </div>
   <div v-else class="empty-placeholder">还没有评价内容</div>
@@ -38,8 +43,14 @@ defineProps({
   adminMode: {
     type: Boolean,
     default: false
+  },
+  showAppeal: {
+    type: Boolean,
+    default: false
   }
 });
+
+defineEmits(["appeal"]);
 
 function formatDate(value) {
   if (!value) {
@@ -52,14 +63,14 @@ function formatDate(value) {
 <style scoped>
 .review-list {
   display: grid;
-  gap: 16px;
+  gap: 14px;
 }
 
 .review-item {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 18px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  padding: 20px;
 }
 
 .review-head {
@@ -70,37 +81,45 @@ function formatDate(value) {
 }
 
 .review-title {
-  font-size: 16px;
-  font-weight: 700;
-  color: #111827;
+  font-size: var(--font-size-md);
+  font-weight: 650;
+  color: var(--color-text-primary);
 }
 
 .review-meta {
   margin-top: 4px;
-  color: #6b7280;
-  font-size: 13px;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
 }
 
 .review-scores {
   margin: 14px 0 10px;
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  color: #475569;
-  font-size: 13px;
+  gap: 14px;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
 }
 
 .review-comment {
   margin: 0 0 12px;
-  color: #334155;
+  color: var(--color-text-primary);
+  line-height: 1.7;
 }
 
 .review-reason {
   margin: 0 0 12px;
-  padding: 8px 10px;
-  border-radius: 6px;
-  background: #fef2f2;
-  color: #991b1b;
-  font-size: 13px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+}
+
+.empty-placeholder {
+  padding: 48px 20px;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-base);
 }
 </style>

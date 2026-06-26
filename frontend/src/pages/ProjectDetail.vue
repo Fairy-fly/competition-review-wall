@@ -347,12 +347,19 @@ onMounted(fetchDetail);
 .flow-list {
   margin: 0;
   padding-left: 20px;
-  color: #475569;
-  line-height: 2;
+  color: var(--color-text-secondary);
+  line-height: 2.2;
+  font-size: var(--font-size-base);
 }
 
 .flow-list li.active {
-  color: #2563eb;
-  font-weight: 700;
+  color: var(--color-brand);
+  font-weight: 650;
+}
+
+.empty-placeholder {
+  padding: 36px 12px;
+  text-align: center;
+  color: var(--color-text-muted);
 }
 </style>

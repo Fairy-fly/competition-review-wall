@@ -63,6 +63,11 @@ async function listWallUsers(filters = {}) {
     whereValues.push(filters.projectType);
   }
 
+  if (filters.skillDirection) {
+    conditions.push("u.skill_direction LIKE ?");
+    whereValues.push(`%${filters.skillDirection}%`);
+  }
+
   if (filters.tag) {
     conditions.push(
       `EXISTS (
