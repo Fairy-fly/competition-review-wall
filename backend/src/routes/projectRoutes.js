@@ -9,8 +9,8 @@ router.use(authMiddleware);
 router.post("/", projectController.createProject);
 router.get("/my", projectController.getMyProjects);
 router.get("/:id", projectController.getProjectDetail);
+router.get("/:id/review-progress", projectController.getReviewProgress);
 router.post("/:id/members", projectController.addMember);
 router.put("/:id/status", projectController.updateStatus);
 
 module.exports = router;
-

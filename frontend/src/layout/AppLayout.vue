@@ -1,6 +1,5 @@
 <template>
   <div class="app-layout">
-    <!-- ========== Desktop sidebar ========== -->
     <aside class="app-sidebar desktop-only" :class="{ collapsed: appStore.collapsed }">
       <div class="brand-block">
         <div class="brand-mark">CW</div>
@@ -36,12 +35,11 @@
       </el-menu>
     </aside>
 
-    <!-- ========== Main area ========== -->
     <div class="app-main-area">
       <header class="app-topbar">
         <div class="topbar-left">
           <span class="mobile-only menu-trigger" @click="drawerVisible = true">&#9776;</span>
-          <span class="mobile-only brand-mark" style="width:32px;height:32px;font-size:12px;flex-shrink:0">CW</span>
+          <span class="mobile-only brand-mark mobile-brand">CW</span>
           <div>
             <div class="topbar-title">欢迎回来，{{ userStore.currentUser?.realName }}</div>
             <div class="topbar-subtitle">
@@ -66,7 +64,6 @@
       </main>
     </div>
 
-    <!-- ========== Mobile bottom nav ========== -->
     <nav class="bottom-nav mobile-only">
       <router-link to="/" class="nav-item" :class="{ active: route.path === '/' }">
         <span class="nav-label">测评墙</span>
@@ -75,14 +72,13 @@
         <span class="nav-label">项目</span>
       </router-link>
       <router-link to="/reviews/create" class="nav-item" :class="{ active: route.path === '/reviews/create' }">
-        <span class="nav-label">提交评价</span>
+        <span class="nav-label">评价</span>
       </router-link>
       <router-link to="/profile" class="nav-item" :class="{ active: route.path === '/profile' }">
         <span class="nav-label">我的</span>
       </router-link>
     </nav>
 
-    <!-- ========== Mobile drawer menu ========== -->
     <el-drawer v-model="drawerVisible" direction="ltr" size="72%" title="导航菜单">
       <el-menu :default-active="route.path" router @select="drawerVisible = false">
         <el-menu-item index="/">
@@ -142,7 +138,6 @@ function handleLogout() {
   display: flex;
 }
 
-/* ---- Desktop sidebar ---- */
 .app-sidebar {
   background: #0f172a;
   width: 220px;
@@ -172,6 +167,13 @@ function handleLogout() {
   font-weight: 700;
 }
 
+.mobile-brand {
+  width: 32px;
+  height: 32px;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
 .brand-copy {
   display: flex;
   flex-direction: column;
@@ -185,7 +187,6 @@ function handleLogout() {
   font-size: 14px;
 }
 
-/* ---- Main area ---- */
 .app-main-area {
   flex: 1;
   min-width: 0;
@@ -193,7 +194,6 @@ function handleLogout() {
   flex-direction: column;
 }
 
-/* ---- Top header ---- */
 .app-topbar {
   height: 72px;
   background: #ffffff;
@@ -232,14 +232,12 @@ function handleLogout() {
   user-select: none;
 }
 
-/* ---- Content ---- */
 .app-content {
   background: #f3f6fb;
   flex: 1;
   padding-bottom: 0;
 }
 
-/* ---- Mobile bottom nav ---- */
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -273,7 +271,6 @@ function handleLogout() {
   line-height: 1;
 }
 
-/* ---- Drawer ---- */
 .drawer-footer {
   padding: 16px 20px;
   border-top: 1px solid #e5e7eb;
@@ -287,7 +284,6 @@ function handleLogout() {
   font-size: 15px;
 }
 
-/* ---- Responsive ---- */
 @media (max-width: 768px) {
   .app-layout {
     flex-direction: column;

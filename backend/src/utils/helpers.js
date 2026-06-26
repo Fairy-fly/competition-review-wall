@@ -16,6 +16,7 @@ function camelizeUser(row) {
     reviewCount: row.review_count !== undefined && row.review_count !== null ? Number(row.review_count) : undefined,
     willingAgainRate:
       row.willing_again_rate !== undefined && row.willing_again_rate !== null ? Number(row.willing_again_rate) : undefined,
+    favoritedAt: row.favorited_at,
     createdAt: row.created_at,
     updatedAt: row.updated_at
   };
@@ -82,6 +83,7 @@ function camelizeReview(row, options = {}) {
     willingAgain: row.willing_again === 1,
     comment: row.comment,
     status: row.status,
+    hiddenReason: row.hidden_reason || "",
     tags: parseTags(row.tags),
     createdAt: row.created_at,
     updatedAt: row.updated_at
@@ -117,4 +119,3 @@ module.exports = {
   parseTags,
   toBoolean
 };
-

@@ -1,20 +1,34 @@
+const favoriteDao = require("../dao/favoriteDao");
 const projectDao = require("../dao/projectDao");
 const reviewDao = require("../dao/reviewDao");
 const userDao = require("../dao/userDao");
-const { camelizeReview, camelizeUser } = require("../utils/helpers");
+const { camelizeProject, camelizeReview, camelizeUser } = require("../utils/helpers");
 const { AppError } = require("../utils/response");
 
-async function getProfile(userId) {
+function formatTag(tag) {
+  return {
+    id: tag.id,
+    name: tag.name,
+    displayName: tag.display_name,
+    type: tag.type,
+    count: Number(tag.count)
+  };
+}
+
+async function getProfile(userId, viewerId) {
   const user = await userDao.findById(userId);
   if (!user) {
     throw new AppError("用户不存在", 404);
   }
 
-  const [summary, topTags, reviews, projectCount] = await Promise.all([
+  const [summary, topTags, recentTags, reviews, projectCount, recentProjects, isFavorite] = await Promise.all([
     reviewDao.getProfileSummary(userId),
     reviewDao.listTopTagsForUser(userId, 5),
+    reviewDao.listRecentTagsForUser(userId, 6),
     reviewDao.listReceivedReviews(userId, { includeHidden: false }),
-    projectDao.countUserProjects(userId)
+    projectDao.countUserProjects(userId),
+    projectDao.listRecentProjectsByUserId(userId, 3),
+    viewerId && Number(viewerId) !== Number(userId) ? favoriteDao.isFavorite(viewerId, userId) : false
   ]);
 
   return {
@@ -29,18 +43,23 @@ async function getProfile(userId) {
       projectCount,
       willingAgainRate: Number(summary?.willing_again_rate || 0)
     },
-    topTags: topTags.map((tag) => ({
-      id: tag.id,
-      name: tag.name,
-      displayName: tag.display_name,
-      type: tag.type,
-      count: Number(tag.count)
+    topTags: topTags.map(formatTag),
+    recentTags: recentTags.map((tag) => ({
+      ...formatTag(tag),
+      latestAt: tag.latest_at
     })),
-    recentReviews: reviews.map((row) => camelizeReview(row))
+    recentProjects: recentProjects.map((project) => ({
+      ...camelizeProject(project),
+      roleInTeam: project.role_in_team
+    })),
+    recentReviews: reviews.map((row) => camelizeReview(row)),
+    viewer: {
+      isSelf: Number(viewerId) === Number(userId),
+      isFavorite
+    }
   };
 }
 
 module.exports = {
   getProfile
 };
-

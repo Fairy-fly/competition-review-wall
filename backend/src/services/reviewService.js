@@ -56,7 +56,7 @@ async function createReview(currentUser, payload) {
   }
 
   const overallScore = validateScore(payload.overallScore, "综合评分");
-  const taskScore = validateScore(payload.taskScore ?? overallScore, "任务完成度");
+  const taskScore = validateScore(payload.taskScore ?? overallScore, "任务完成");
   const communicationScore = validateScore(payload.communicationScore ?? overallScore, "沟通协作");
   const responsibilityScore = validateScore(payload.responsibilityScore ?? overallScore, "责任心");
   const skillScore = validateScore(payload.skillScore ?? overallScore, "技术能力");
@@ -130,4 +130,3 @@ module.exports = {
   createReview,
   getReceivedReviews
 };
-

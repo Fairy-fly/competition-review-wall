@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS reviews (
   willing_again TINYINT(1) NOT NULL DEFAULT 1,
   comment TEXT,
   status VARCHAR(20) NOT NULL DEFAULT 'normal',
+  hidden_reason VARCHAR(255) NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   UNIQUE KEY uk_review_once (project_id, reviewer_id, reviewee_id),
@@ -92,3 +93,12 @@ CREATE TABLE IF NOT EXISTS operation_logs (
   CONSTRAINT fk_operation_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
+CREATE TABLE IF NOT EXISTS user_favorites (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  user_id BIGINT NOT NULL,
+  target_user_id BIGINT NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_user_favorite (user_id, target_user_id),
+  CONSTRAINT fk_favorite_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  CONSTRAINT fk_favorite_target FOREIGN KEY (target_user_id) REFERENCES users(id) ON DELETE CASCADE
+);

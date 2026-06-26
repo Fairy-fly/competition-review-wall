@@ -15,11 +15,12 @@
         <span>任务 {{ review.taskScore }}</span>
         <span>沟通 {{ review.communicationScore }}</span>
         <span>责任 {{ review.responsibilityScore }}</span>
-        <span>技术 {{ review.skillScore }}</span>
+        <span>技能 {{ review.skillScore }}</span>
         <span>{{ review.willingAgain ? "愿意再次组队" : "再次组队意愿低" }}</span>
       </div>
 
       <p class="review-comment">{{ review.comment || "这条评价没有填写文字内容。" }}</p>
+      <p v-if="adminMode && review.hiddenReason" class="review-reason">隐藏原因：{{ review.hiddenReason }}</p>
       <TagList :tags="review.tags" />
     </article>
   </div>
@@ -93,5 +94,13 @@ function formatDate(value) {
   margin: 0 0 12px;
   color: #334155;
 }
-</style>
 
+.review-reason {
+  margin: 0 0 12px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: #fef2f2;
+  color: #991b1b;
+  font-size: 13px;
+}
+</style>

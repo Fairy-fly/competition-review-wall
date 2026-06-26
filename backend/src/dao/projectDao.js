@@ -57,6 +57,26 @@ async function listProjectsByUserId(userId) {
   );
 }
 
+async function listRecentProjectsByUserId(userId, limit = 3) {
+  const safeLimit = Math.max(1, Math.min(10, Number(limit) || 3));
+  return query(
+    `SELECT
+       cp.*,
+       u.real_name AS creator_name,
+       tm.role_in_team,
+       COUNT(DISTINCT tm2.id) AS member_count
+     FROM team_members tm
+     INNER JOIN competition_projects cp ON cp.id = tm.project_id
+     INNER JOIN users u ON u.id = cp.creator_id
+     LEFT JOIN team_members tm2 ON tm2.project_id = cp.id
+     WHERE tm.user_id = ?
+     GROUP BY cp.id, tm.role_in_team
+     ORDER BY cp.created_at DESC
+     LIMIT ${safeLimit}`,
+    [userId]
+  );
+}
+
 async function listAllProjects() {
   return query(
     `SELECT
@@ -113,6 +133,6 @@ module.exports = {
   listAllProjects,
   listProjectMembers,
   listProjectsByUserId,
+  listRecentProjectsByUserId,
   updateProjectStatus
 };
-

@@ -1,5 +1,16 @@
 USE competition_review_wall;
 
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE review_tags;
+TRUNCATE TABLE reviews;
+TRUNCATE TABLE user_favorites;
+TRUNCATE TABLE team_members;
+TRUNCATE TABLE competition_projects;
+TRUNCATE TABLE operation_logs;
+TRUNCATE TABLE tags;
+TRUNCATE TABLE users;
+SET FOREIGN_KEY_CHECKS = 1;
+
 INSERT INTO users (id, student_no, real_name, password, college, major, grade, skill_direction, role)
 VALUES
   (1, 'admin001', '系统管理员', '$2a$10$w5dCNKRheSI4bfhvn0r8.O6MLxq3cTPZp6sz91YbmW9lT/1FIkgH6', '信息中心', '平台管理', '教师', '平台运营', 'admin'),
@@ -26,7 +37,9 @@ VALUES
   (5, 'needs_clear_assignment', 'neutral', '需要明确分工', 1),
   (6, 'steady_support', 'neutral', '适合辅助型角色', 1),
   (7, 'late_communication', 'risk', '沟通不及时', 1),
-  (8, 'low_participation', 'risk', '参与度较低', 1)
+  (8, 'low_participation', 'risk', '参与度较低', 1),
+  (9, 'presentation_ready', 'positive', '答辩表现稳', 1),
+  (10, 'creative_ideas', 'positive', '想法有创意', 1)
 ON DUPLICATE KEY UPDATE
   type = VALUES(type),
   display_name = VALUES(display_name),
@@ -34,10 +47,11 @@ ON DUPLICATE KEY UPDATE
 
 INSERT INTO competition_projects (id, name, type, team_name, start_date, end_date, creator_id, status, description)
 VALUES
-  (1, '互联网+ 校赛项目', '创新创业', '火力全开队', '2026-03-01', '2026-04-18', 2, 'reviewable', '围绕校园服务场景做一套可演示产品。'),
-  (2, '数学建模校赛', '数学建模', '模型推进队', '2026-01-08', '2026-02-20', 3, 'archived', '完成建模报告、代码和答辩材料。'),
-  (3, '挑战杯创新项目', '科创竞赛', '逐光小组', '2026-04-05', '2026-06-20', 5, 'ongoing', '正在推进调研与原型阶段。')
+  (1, '互联网+ 校赛项目', '创新创业', '火力全开队', '2026-03-01', '2026-04-18', 2, 'reviewable', '围绕校园服务场景完成一套可演示产品，包含原型、前后端和答辩材料。'),
+  (2, '数学建模校赛', '数学建模', '模型推进队', '2026-01-08', '2026-02-20', 3, 'archived', '完成建模报告、代码、数据分析和答辩材料。'),
+  (3, '挑战杯创新项目', '科创竞赛', '逐光小组', '2026-04-05', '2026-06-20', 5, 'ongoing', '正在推进调研与原型阶段，暂未进入匿名互评。')
 ON DUPLICATE KEY UPDATE
+  name = VALUES(name),
   type = VALUES(type),
   team_name = VALUES(team_name),
   start_date = VALUES(start_date),
@@ -62,15 +76,17 @@ ON DUPLICATE KEY UPDATE
 
 INSERT INTO reviews (
   id, project_id, reviewer_id, reviewee_id, overall_score, task_score, communication_score,
-  responsibility_score, skill_score, willing_again, comment, status
+  responsibility_score, skill_score, willing_again, comment, status, hidden_reason
 )
 VALUES
-  (1, 1, 2, 3, 4, 4, 5, 4, 4, 1, '建模和分析都很稳，协作推进比较顺。', 'normal'),
-  (2, 1, 3, 2, 5, 5, 4, 5, 5, 1, '前端推进很快，临近答辩时扛住了交付压力。', 'normal'),
-  (3, 1, 4, 2, 3, 3, 2, 3, 4, 0, '个人能力不错，但有时同步不够及时。', 'hidden'),
-  (4, 2, 3, 4, 5, 5, 5, 5, 4, 1, '文档组织非常清楚，答辩表达也很稳。', 'normal'),
-  (5, 2, 4, 5, 3, 3, 3, 3, 3, 1, '完成分内任务没问题，但更适合明确分工的节奏。', 'normal'),
-  (6, 2, 5, 3, 4, 4, 4, 4, 4, 1, '整体配合稳定，项目推进过程里比较靠谱。', 'normal')
+  (1, 1, 2, 3, 4, 4, 5, 4, 4, 1, '建模和分析都很稳，遇到问题会及时说明，协作推进比较顺。', 'normal', NULL),
+  (2, 1, 3, 2, 5, 5, 4, 5, 5, 1, '前端推进很快，临近答辩时扛住了交付压力。', 'normal', NULL),
+  (3, 1, 4, 2, 3, 3, 2, 3, 4, 0, '个人能力不错，但有时同步不够及时。', 'hidden', '该评价表述偏主观，暂不在前台公开'),
+  (4, 2, 3, 4, 5, 5, 5, 5, 4, 1, '文档组织非常清晰，答辩表达也很稳。', 'normal', NULL),
+  (5, 2, 4, 5, 3, 3, 3, 3, 3, 1, '完成分内任务没问题，更适合明确分工的节奏。', 'normal', NULL),
+  (6, 2, 5, 3, 4, 4, 4, 4, 4, 1, '整体配合稳定，项目推进过程中比较靠谱。', 'normal', NULL),
+  (7, 1, 2, 4, 4, 4, 4, 5, 3, 1, '材料整理很细，答辩前的检查清单帮了不少忙。', 'normal', NULL),
+  (8, 2, 3, 5, 4, 4, 4, 4, 5, 1, '数据处理速度快，能把复杂结果整理成可解释内容。', 'normal', NULL)
 ON DUPLICATE KEY UPDATE
   overall_score = VALUES(overall_score),
   task_score = VALUES(task_score),
@@ -79,7 +95,8 @@ ON DUPLICATE KEY UPDATE
   skill_score = VALUES(skill_score),
   willing_again = VALUES(willing_again),
   comment = VALUES(comment),
-  status = VALUES(status);
+  status = VALUES(status),
+  hidden_reason = VALUES(hidden_reason);
 
 INSERT INTO review_tags (id, review_id, tag_id)
 VALUES
@@ -90,11 +107,15 @@ VALUES
   (5, 3, 7),
   (6, 3, 5),
   (7, 4, 4),
-  (8, 4, 2),
+  (8, 4, 9),
   (9, 5, 5),
   (10, 5, 6),
   (11, 6, 1),
-  (12, 6, 2)
+  (12, 6, 2),
+  (13, 7, 4),
+  (14, 7, 9),
+  (15, 8, 3),
+  (16, 8, 10)
 ON DUPLICATE KEY UPDATE
   tag_id = VALUES(tag_id);
 
@@ -108,3 +129,10 @@ ON DUPLICATE KEY UPDATE
   action = VALUES(action),
   detail = VALUES(detail);
 
+INSERT INTO user_favorites (id, user_id, target_user_id)
+VALUES
+  (1, 2, 3),
+  (2, 2, 4),
+  (3, 3, 2)
+ON DUPLICATE KEY UPDATE
+  target_user_id = VALUES(target_user_id);

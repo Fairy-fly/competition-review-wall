@@ -21,7 +21,7 @@ async function getProjects(req, res, next) {
 
 async function getReviews(req, res, next) {
   try {
-    const data = await adminService.getReviews();
+    const data = await adminService.getReviews(req.query);
     sendSuccess(res, data, "获取评价列表成功");
   } catch (error) {
     next(error);
@@ -30,7 +30,7 @@ async function getReviews(req, res, next) {
 
 async function hideReview(req, res, next) {
   try {
-    const data = await adminService.hideReview(req.user, Number(req.params.id));
+    const data = await adminService.hideReview(req.user, Number(req.params.id), req.body.reason);
     sendSuccess(res, data, "隐藏评价成功");
   } catch (error) {
     next(error);

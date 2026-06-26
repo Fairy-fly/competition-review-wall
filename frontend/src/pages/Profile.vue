@@ -10,7 +10,7 @@
         <div class="surface-actions">
           <div>
             <strong>资料维护</strong>
-            <div class="muted-text">修改后的信息会同步到测评墙公开画像。</div>
+            <div class="muted-text">这些信息会同步到测评墙公开画像。</div>
           </div>
         </div>
 
@@ -35,6 +35,7 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" :loading="saving" @click="saveProfile">保存资料</el-button>
+            <el-button @click="router.push(`/users/${userStore.currentUser?.id}`)">查看公开画像</el-button>
           </el-form-item>
         </el-form>
       </section>
@@ -43,7 +44,7 @@
         <div class="surface-actions">
           <div>
             <strong>我的协作概览</strong>
-            <div class="muted-text">这些数据来自正常状态的匿名评价。</div>
+            <div class="muted-text">仅统计正常状态的匿名评价。</div>
           </div>
         </div>
         <div class="stat-grid">
@@ -59,11 +60,71 @@
 
         <div class="section-block">
           <strong>高频标签</strong>
-          <div class="muted-text" style="margin: 6px 0 10px">最容易被队友记住的协作印象。</div>
+          <div class="muted-text tag-note">这些标签代表队友最容易记住的协作印象。</div>
           <TagList :tags="profile.topTags" show-count />
         </div>
       </section>
     </div>
+
+    <section class="section-block three-col-grid">
+      <div class="section-surface">
+        <div class="surface-actions">
+          <div>
+            <strong>近 3 个参与项目</strong>
+            <div class="muted-text">用于快速回忆画像来自哪些竞赛经历。</div>
+          </div>
+        </div>
+        <div v-if="profile.recentProjects.length" class="mini-list">
+          <button
+            v-for="project in profile.recentProjects"
+            :key="project.id"
+            class="mini-row"
+            @click="router.push(`/projects/${project.id}`)"
+          >
+            <span>
+              <strong>{{ project.name }}</strong>
+              <small>{{ project.type || "未填写类型" }} · {{ project.roleInTeam || "队员" }}</small>
+            </span>
+            <el-tag size="small">{{ statusText(project.status) }}</el-tag>
+          </button>
+        </div>
+        <div v-else class="empty-placeholder">暂无参与项目</div>
+      </div>
+
+      <div class="section-surface">
+        <div class="surface-actions">
+          <div>
+            <strong>我收藏的队友</strong>
+            <div class="muted-text">适合后续组队时重点关注。</div>
+          </div>
+          <el-button link type="primary" @click="router.push('/')">去测评墙找人</el-button>
+        </div>
+        <div v-if="favorites.length" class="mini-list">
+          <button v-for="user in favorites" :key="user.id" class="mini-row" @click="router.push(`/users/${user.id}`)">
+            <span>
+              <strong>{{ user.realName }}</strong>
+              <small>{{ user.major || "未填写专业" }} · {{ user.skillDirection || "未填写方向" }}</small>
+            </span>
+            <el-tag size="small" type="success">{{ user.averageScore || 0 }} 分</el-tag>
+          </button>
+        </div>
+        <div v-else class="empty-placeholder">暂未收藏队友</div>
+      </div>
+
+      <div class="section-surface">
+        <div class="surface-actions">
+          <div>
+            <strong>指标说明</strong>
+            <div class="muted-text">答辩展示时可以直接解释统计口径。</div>
+          </div>
+        </div>
+        <ul class="explain-list">
+          <li>综合分来自正常状态评价的平均分。</li>
+          <li>再次组队率表示愿意再次组队的评价占比。</li>
+          <li>管理员隐藏评价后，前台画像会自动剔除。</li>
+        </ul>
+      </div>
+    </section>
 
     <section class="section-block section-surface">
       <div class="surface-actions">
@@ -80,20 +141,25 @@
 <script setup>
 import { onMounted, reactive, ref } from "vue";
 import { ElMessage } from "element-plus";
+import { useRouter } from "vue-router";
 
 import { getProfile } from "@/api/profileApi";
-import { updateCurrentUser } from "@/api/userApi";
+import { getFavorites, updateCurrentUser } from "@/api/userApi";
 import RadarChart from "@/components/RadarChart.vue";
 import ReviewList from "@/components/ReviewList.vue";
 import ScoreCard from "@/components/ScoreCard.vue";
 import TagList from "@/components/TagList.vue";
 import { useUserStore } from "@/store/user";
 
+const router = useRouter();
 const userStore = useUserStore();
 const saving = ref(false);
+const favorites = ref([]);
 const profile = reactive({
   summary: {},
   topTags: [],
+  recentTags: [],
+  recentProjects: [],
   recentReviews: []
 });
 
@@ -104,6 +170,16 @@ const form = reactive({
   grade: "",
   skillDirection: ""
 });
+
+const statusMap = {
+  ongoing: "进行中",
+  reviewable: "可评价",
+  archived: "已归档"
+};
+
+function statusText(status) {
+  return statusMap[status] || status || "-";
+}
 
 function syncForm() {
   Object.assign(form, {
@@ -120,8 +196,12 @@ async function fetchProfile() {
     return;
   }
 
-  const response = await getProfile(userStore.currentUser.id);
-  Object.assign(profile, response.data);
+  const [profileRes, favoritesRes] = await Promise.all([
+    getProfile(userStore.currentUser.id),
+    getFavorites()
+  ]);
+  Object.assign(profile, profileRes.data);
+  favorites.value = favoritesRes.data || [];
 }
 
 async function saveProfile() {
@@ -149,3 +229,50 @@ onMounted(async () => {
 });
 </script>
 
+<style scoped>
+.tag-note {
+  margin: 6px 0 10px;
+}
+
+.mini-list {
+  display: grid;
+  gap: 10px;
+}
+
+.mini-row {
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.mini-row strong,
+.mini-row small {
+  display: block;
+}
+
+.mini-row small {
+  margin-top: 2px;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.mini-row:hover {
+  border-color: #2563eb;
+}
+
+.explain-list {
+  margin: 0;
+  padding-left: 18px;
+  color: #475569;
+  line-height: 1.9;
+  font-size: 14px;
+}
+</style>

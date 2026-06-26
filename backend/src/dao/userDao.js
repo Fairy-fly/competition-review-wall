@@ -84,6 +84,15 @@ async function listWallUsers(filters = {}) {
     havingValues.push(Number(filters.minScore));
   }
 
+  if (filters.minWillingAgainRate) {
+    having.push("willing_again_rate >= ?");
+    havingValues.push(Number(filters.minWillingAgainRate));
+  }
+
+  if (String(filters.onlyReviewed).toLowerCase() === "true") {
+    having.push("review_count > 0");
+  }
+
   const orderMap = {
     score_desc: "average_score DESC, review_count DESC, u.created_at DESC",
     reviews_desc: "review_count DESC, average_score DESC, u.created_at DESC",
@@ -142,4 +151,3 @@ module.exports = {
   listWallUsers,
   updateUser
 };
-

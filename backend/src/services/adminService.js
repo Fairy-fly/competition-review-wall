@@ -19,14 +19,18 @@ async function getProjects() {
   return projects.map((project) => camelizeProject(project));
 }
 
-async function getReviews() {
-  const reviews = await reviewDao.listAllReviews();
+async function getReviews(filters = {}) {
+  const reviews = await reviewDao.listAllReviews(filters);
   return reviews.map((row) => camelizeReview(row, { includeReviewerName: true, includeReviewerId: true }));
 }
 
-async function hideReview(currentUser, reviewId) {
-  const reviews = await reviewDao.listAllReviews();
-  const review = reviews.find((item) => item.id === Number(reviewId));
+async function hideReview(currentUser, reviewId, reason) {
+  const cleanReason = String(reason || "").trim();
+  if (!cleanReason) {
+    throw new AppError("请填写隐藏原因");
+  }
+
+  const review = await reviewDao.findReviewById(reviewId);
   if (!review) {
     throw new AppError("评价不存在", 404);
   }
@@ -35,11 +39,10 @@ async function hideReview(currentUser, reviewId) {
     throw new AppError("该评价已经被隐藏");
   }
 
-  await reviewDao.hideReview(reviewId);
-  await logOperation(currentUser.userId, "admin.hideReview", `reviewId=${reviewId}`);
+  await reviewDao.hideReview(reviewId, cleanReason);
+  await logOperation(currentUser.userId, "admin.hideReview", `reviewId=${reviewId}, reason=${cleanReason}`);
 
-  const updatedReviews = await reviewDao.listAllReviews();
-  const updated = updatedReviews.find((item) => item.id === Number(reviewId));
+  const updated = await reviewDao.findReviewById(reviewId);
   return camelizeReview(updated, { includeReviewerName: true, includeReviewerId: true });
 }
 
@@ -49,4 +52,3 @@ module.exports = {
   getUsers,
   hideReview
 };
-

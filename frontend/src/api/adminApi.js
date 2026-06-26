@@ -8,11 +8,10 @@ export function getAdminProjects() {
   return http.get("/admin/projects");
 }
 
-export function getAdminReviews() {
-  return http.get("/admin/reviews");
+export function getAdminReviews(params) {
+  return http.get("/admin/reviews", { params });
 }
 
-export function hideReview(id) {
-  return http.put(`/admin/reviews/${id}/hide`);
+export function hideReview(id, data) {
+  return http.put(`/admin/reviews/${id}/hide`, data);
 }
-

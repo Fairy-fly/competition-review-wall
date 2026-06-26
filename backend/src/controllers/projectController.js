@@ -28,6 +28,15 @@ async function getProjectDetail(req, res, next) {
   }
 }
 
+async function getReviewProgress(req, res, next) {
+  try {
+    const data = await projectService.getReviewProgress(req.user, Number(req.params.id));
+    sendSuccess(res, data, "获取评价进度成功");
+  } catch (error) {
+    next(error);
+  }
+}
+
 async function addMember(req, res, next) {
   try {
     const data = await projectService.addMember(req.user, Number(req.params.id), req.body);
@@ -51,6 +60,6 @@ module.exports = {
   createProject,
   getMyProjects,
   getProjectDetail,
+  getReviewProgress,
   updateStatus
 };
-

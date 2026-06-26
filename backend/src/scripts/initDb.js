@@ -33,7 +33,22 @@ async function run() {
       .replace(/USE\s+\S+;\s*/gi, "");
     seedSql = seedSql.replace(/USE\s+\S+;\s*/gi, "");
 
+    schemaSql = schemaSql.replace(/ALTER\s+TABLE\s+reviews\s+ADD\s+COLUMN\s+IF\s+NOT\s+EXISTS\s+hidden_reason[^;]*;\s*/gi, "");
+
     await connection.query(schemaSql);
+
+    const [columns] = await connection.query(
+      `SELECT COLUMN_NAME
+       FROM INFORMATION_SCHEMA.COLUMNS
+       WHERE TABLE_SCHEMA = DATABASE()
+         AND TABLE_NAME = 'reviews'
+         AND COLUMN_NAME = 'hidden_reason'`
+    );
+
+    if (!columns.length) {
+      await connection.query("ALTER TABLE reviews ADD COLUMN hidden_reason VARCHAR(255) NULL AFTER status");
+    }
+
     await connection.query(seedSql);
 
     console.log("Database schema and seed data applied successfully.");
