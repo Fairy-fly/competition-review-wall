@@ -446,9 +446,9 @@ onMounted(async () => {
 .preview-key-label { font-size: 11px; color: var(--text-faint); }
 .preview-key-value { font-size: 22px; font-weight: 700; color: var(--teal); }
 .preview-tags { display: flex; gap: 6px; }
-.preview-chip { padding: 3px 10px; border-radius: 14px; font-size: 11px; font-weight: 500; border: 1px solid; }
-.preview-chip.positive { background: rgba(59,130,176,0.07); color: #256c95; border-color: rgba(59,130,176,0.22); }
-.preview-chip.neutral { background: rgba(139,143,163,0.06); color: #6b6f85; border-color: rgba(139,143,163,0.18); }
+.preview-chip { padding: 3px 10px; border-radius: 14px; font-size: 11px; font-weight: 500; border: 1.2px solid; }
+.preview-chip.positive { background: rgba(59,130,176,0.10); color: #1e5a7a; border-color: rgba(59,130,176,0.35); }
+.preview-chip.neutral { background: rgba(100,116,139,0.08); color: #4a5568; border-color: rgba(100,116,139,0.30); }
 
 /* Quick actions */
 .hero-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }

@@ -15,14 +15,8 @@
 
 <script setup>
 defineProps({
-  tags: {
-    type: Array,
-    default: () => []
-  },
-  showCount: {
-    type: Boolean,
-    default: false
-  }
+  tags: { type: Array, default: () => [] },
+  showCount: { type: Boolean, default: false }
 });
 </script>
 
@@ -45,33 +39,35 @@ defineProps({
   font-weight: 500;
   line-height: 1.5;
   white-space: nowrap;
-  transition: all 0.15s ease;
+  transition: all 0.18s ease;
+  cursor: default;
 }
 
 .tag-positive {
-  background: rgba(59, 130, 176, 0.08);
-  color: #256c95;
-  border: 1.2px solid rgba(59, 130, 176, 0.28);
+  background: rgba(59, 130, 176, 0.10);
+  color: #1e5a7a;
+  border: 1.4px solid rgba(59, 130, 176, 0.35);
 }
 
 .tag-neutral {
-  background: rgba(139, 143, 163, 0.08);
-  color: #6b6f85;
-  border: 1.2px solid rgba(139, 143, 163, 0.28);
+  background: rgba(100, 116, 139, 0.08);
+  color: #4a5568;
+  border: 1.4px solid rgba(100, 116, 139, 0.30);
 }
 
 .tag-risk {
-  background: rgba(212, 139, 74, 0.08);
-  color: #b8702d;
-  border: 1.2px solid rgba(212, 139, 74, 0.28);
+  background: rgba(212, 139, 74, 0.10);
+  color: #a45d1e;
+  border: 1.4px solid rgba(212, 139, 74, 0.35);
 }
 
 .tag-chip:hover {
-  filter: brightness(0.95);
+  transform: translateY(-1px);
+  filter: brightness(0.92);
 }
 
 .tag-count {
-  opacity: 0.65;
+  opacity: 0.6;
   font-weight: 400;
 }
 

@@ -1,66 +1,66 @@
 <template>
-  <div class="score-card" :style="{ borderTopColor: accent }">
-    <div class="score-label">{{ label }}</div>
-    <div class="score-value">{{ value }}</div>
-    <div v-if="hint" class="score-hint">{{ hint }}</div>
+  <div class="score-card" :style="{ '--accent': accent }">
+    <div class="sc-icon-wrap">
+      <slot name="icon" />
+    </div>
+    <div class="sc-value">{{ value }}</div>
+    <div class="sc-label">{{ label }}</div>
+    <div v-if="hint" class="sc-hint">{{ hint }}</div>
   </div>
 </template>
 
 <script setup>
 defineProps({
-  label: {
-    type: String,
-    required: true
-  },
-  value: {
-    type: [String, Number],
-    required: true
-  },
-  hint: {
-    type: String,
-    default: ""
-  },
-  accent: {
-    type: String,
-    default: "var(--color-brand)"
-  }
+  label: { type: String, required: true },
+  value: { type: [String, Number], required: true },
+  hint: { type: String, default: "" },
+  accent: { type: String, default: "var(--primary)" }
 });
 </script>
 
 <style scoped>
 .score-card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border-light);
-  border-top-width: 3px;
+  background: var(--surface-solid);
+  border: 1px solid var(--border-soft);
   border-radius: var(--radius-md);
-  padding: 20px;
-  transition: box-shadow var(--transition-fast);
+  padding: 22px 20px;
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+.score-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 0 0 2px 2px;
 }
 
 .score-card:hover {
   box-shadow: var(--shadow-md);
+  border-color: var(--accent);
 }
 
-.score-label {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  letter-spacing: 0.3px;
-  text-transform: uppercase;
-}
-
-.score-value {
-  margin-top: 8px;
-  font-size: var(--font-size-2xl);
-  font-weight: 700;
-  color: var(--color-text-primary);
+.sc-value {
+  font-size: 32px;
+  font-weight: 750;
+  color: var(--text-main);
   letter-spacing: -0.6px;
   line-height: 1.1;
+  margin-top: 4px;
 }
 
-.score-hint {
+.sc-label {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
   margin-top: 6px;
-  color: var(--color-text-muted);
-  font-size: var(--font-size-xs);
+}
+
+.sc-hint {
+  margin-top: 4px;
+  color: var(--text-faint);
+  font-size: 12px;
 }
 </style>

@@ -20,17 +20,29 @@
       <div class="section-surface">
         <div class="panel-title">热门标签 TOP 8</div>
         <div ref="tagChartRef" class="chart-box"></div>
-        <div v-if="!dashboard.hotTags.length" class="empty-placeholder">暂无数据</div>
+        <div v-if="!dashboard.hotTags.length" class="empty-chart">
+          <el-icon :size="36"><DataAnalysis /></el-icon>
+          <span>暂无标签数据</span>
+          <small>产生评价并打标签后这里会显示排名</small>
+        </div>
       </div>
       <div class="section-surface">
         <div class="panel-title">各专业平均评分</div>
         <div ref="majorChartRef" class="chart-box"></div>
-        <div v-if="!adminStats.byMajor.length" class="empty-placeholder">暂无数据</div>
+        <div v-if="!adminStats.byMajor.length" class="empty-chart">
+          <el-icon :size="36"><Histogram /></el-icon>
+          <span>暂无各专业数据</span>
+          <small>当产生更多评价后，这里会自动生成各专业均分对比</small>
+        </div>
       </div>
       <div class="section-surface">
         <div class="panel-title">近 7 天评价趋势</div>
         <div ref="trendChartRef" class="chart-box"></div>
-        <div v-if="!adminStats.reviewTrend.length" class="empty-placeholder">近 7 天暂无新评价</div>
+        <div v-if="!adminStats.reviewTrend.length" class="empty-chart">
+          <el-icon :size="36"><DataLine /></el-icon>
+          <span>暂无近期评价</span>
+          <small>近 7 天产生新评价后，这里会显示趋势折线图</small>
+        </div>
       </div>
     </section>
 
@@ -322,6 +334,7 @@
 import { computed, nextTick, onMounted, reactive, ref, watch } from "vue";
 import { ElMessage } from "element-plus";
 import * as echarts from "echarts";
+import { DataAnalysis, Histogram, DataLine } from "@element-plus/icons-vue";
 
 import { getAdminProjects, getAdminReviews, getAdminUsers, hideReview, resetPassword } from "@/api/adminApi";
 import { getAppeals, processAppeal } from "@/api/appealApi";
@@ -427,11 +440,32 @@ function renderTagChart() {
   if (!tagChartRef.value || !dashboard.hotTags.length) return;
   const chart = echarts.init(tagChartRef.value);
   chart.setOption({
-    tooltip: { trigger: "axis" },
-    grid: { left: 100, right: 20, top: 10, bottom: 20 },
-    xAxis: { type: "value" },
-    yAxis: { type: "category", data: dashboard.hotTags.map((t) => t.displayName).reverse(), inverse: true },
-    series: [{ type: "bar", data: dashboard.hotTags.map((t) => t.count).reverse(), itemStyle: { color: "#7c3aed" } }]
+    tooltip: {
+      trigger: "axis",
+      backgroundColor: "#fff",
+      borderColor: "var(--border-soft)",
+      textStyle: { color: "#0f172a", fontSize: 13 },
+      formatter: (p) => `${p[0].name}<br/><b>${p[0].value}</b> 次`
+    },
+    grid: { left: 100, right: 24, top: 8, bottom: 20 },
+    xAxis: { type: "value", axisLine: { show: false }, axisTick: { show: false }, splitLine: { lineStyle: { color: "#f1f5f9" } } },
+    yAxis: {
+      type: "category", data: dashboard.hotTags.map(t => t.displayName).reverse(), inverse: true,
+      axisLine: { show: false }, axisTick: { show: false },
+      axisLabel: { color: "#64748b", fontSize: 13 }
+    },
+    series: [{
+      type: "bar",
+      data: dashboard.hotTags.map((t) => t.count).reverse(),
+      itemStyle: {
+        borderRadius: [0, 6, 6, 0],
+        color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+          { offset: 0, color: "#818cf8" }, { offset: 1, color: "#6366f1" }
+        ])
+      },
+      barWidth: 16,
+      emphasis: { itemStyle: { color: "#4f46e5" } }
+    }]
   });
 }
 
@@ -439,11 +473,32 @@ function renderMajorChart() {
   if (!majorChartRef.value || !adminStats.byMajor.length) return;
   const chart = echarts.init(majorChartRef.value);
   chart.setOption({
-    tooltip: { trigger: "axis" },
-    grid: { left: 90, right: 20, top: 10, bottom: 20 },
-    xAxis: { type: "value", max: 5 },
-    yAxis: { type: "category", data: adminStats.byMajor.map((m) => m.major).reverse(), inverse: true },
-    series: [{ type: "bar", data: adminStats.byMajor.map((m) => m.avgScore).reverse(), itemStyle: { color: "#0f766e" } }]
+    tooltip: {
+      trigger: "axis",
+      backgroundColor: "#fff",
+      borderColor: "var(--border-soft)",
+      textStyle: { color: "#0f172a", fontSize: 13 },
+      formatter: (p) => `${p[0].name}<br/>平均 <b>${p[0].value}</b> 分`
+    },
+    grid: { left: 90, right: 24, top: 8, bottom: 20 },
+    xAxis: { type: "value", max: 5, axisLine: { show: false }, axisTick: { show: false }, splitLine: { lineStyle: { color: "#f1f5f9" } } },
+    yAxis: {
+      type: "category", data: adminStats.byMajor.map(m => m.major).reverse(), inverse: true,
+      axisLine: { show: false }, axisTick: { show: false },
+      axisLabel: { color: "#64748b", fontSize: 13 }
+    },
+    series: [{
+      type: "bar",
+      data: adminStats.byMajor.map(m => m.avgScore).reverse(),
+      itemStyle: {
+        borderRadius: [0, 6, 6, 0],
+        color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+          { offset: 0, color: "#5eead4" }, { offset: 1, color: "#0d9488" }
+        ])
+      },
+      barWidth: 16,
+      emphasis: { itemStyle: { color: "#0f766e" } }
+    }]
   });
 }
 
@@ -667,4 +722,16 @@ onMounted(async () => {
   text-align: center;
   color: #9ca3af;
 }
+
+.empty-chart {
+  height: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--text-faint);
+}
+.empty-chart span { font-size: 15px; font-weight: 600; color: var(--text-muted); }
+.empty-chart small { font-size: 12px; color: var(--text-faint); }
 </style>
