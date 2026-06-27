@@ -384,8 +384,8 @@ onMounted(async () => {
 <style scoped>
 /* Hero with subtle grid pattern */
 .hero-banner {
-  display: flex; gap: 36px; align-items: stretch;
-  padding: 40px 44px; margin-bottom: 28px;
+  display: flex; gap: 24px; align-items: stretch;
+  padding: 40px 40px; margin-bottom: 28px;
   background:
     radial-gradient(circle at 20% 30%, rgba(79,99,246,0.04) 0%, transparent 50%),
     radial-gradient(circle at 80% 70%, rgba(15,118,110,0.03) 0%, transparent 50%),
@@ -449,8 +449,8 @@ onMounted(async () => {
 .preview-key-value { font-size: 22px; font-weight: 700; color: var(--teal); }
 .preview-tags { display: flex; gap: 6px; }
 .preview-chip { display:inline-flex; align-items:center; height:26px; padding:0 10px; border-radius:999px; font-size:11px; font-weight:500; border:1.2px solid; line-height:1; box-sizing:border-box; white-space:nowrap; }
-.preview-chip.positive { background: rgba(59,130,176,0.10); color: #1e5a7a; border-color: rgba(59,130,176,0.35); }
-.preview-chip.neutral { background: rgba(100,116,139,0.08); color: #4a5568; border-color: rgba(100,116,139,0.30); }
+.preview-chip.positive { background: rgba(91,108,255,0.09); color: #3F51D1; border-color: rgba(91,108,255,0.24); }
+.preview-chip.neutral { background: rgba(148,163,184,0.09); color: #64748B; border-color: rgba(148,163,184,0.20); }
 
 @media (prefers-reduced-motion: reduce) {
   .radar-mini-scan { animation: none; }

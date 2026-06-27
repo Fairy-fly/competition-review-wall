@@ -46,28 +46,28 @@ defineProps({
 }
 
 .tag-positive {
-  background: rgba(59, 130, 176, 0.10);
-  color: #1e5a7a;
-  border-color: rgba(59, 130, 176, 0.35);
+  background: rgba(91,108,255,0.09);
+  color: #3F51D1;
+  border-color: rgba(91,108,255,0.24);
 }
 
 .tag-neutral {
-  background: rgba(100, 116, 139, 0.08);
-  color: #4a5568;
-  border-color: rgba(100, 116, 139, 0.30);
+  background: rgba(148,163,184,0.09);
+  color: #64748B;
+  border-color: rgba(148,163,184,0.20);
 }
 
 .tag-risk {
-  background: rgba(212, 139, 74, 0.10);
-  color: #a45d1e;
-  border-color: rgba(212, 139, 74, 0.35);
+  background: rgba(217,137,34,0.09);
+  color: #C57A18;
+  border-color: rgba(217,137,34,0.22);
 }
 
 .tag-chip:hover {
   transform: none;
-  background: rgba(79, 99, 246, 0.10);
-  border-color: rgba(79, 99, 246, 0.40);
-  box-shadow: 0 2px 8px rgba(79, 99, 246, 0.10);
+  background: rgba(91,108,255,0.12);
+  border-color: rgba(91,108,255,0.32);
+  box-shadow: 0 2px 8px rgba(91,108,255,0.08);
 }
 
 .tag-count {

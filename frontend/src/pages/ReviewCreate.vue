@@ -222,16 +222,17 @@ onMounted(async () => {
 .tag-group { padding:12px 14px; border:1px solid var(--border-soft); border-radius:var(--radius-sm); background:var(--surface-soft); display:grid; gap:10px; }
 .tag-group-label { font-size:13px; font-weight:600; color:var(--text-muted); }
 .tag-chip-row { display:flex; flex-wrap:wrap; gap:8px; }
-.tag-select-chip {
-  padding:5px 14px; border-radius:20px; border:1.2px solid var(--border-medium);
-  background:var(--surface-solid); font-size:13px; color:var(--text-muted);
-  cursor:pointer; transition:all 0.15s ease; display:inline-flex; align-items:center;
-  font-family:inherit; line-height:1.5;
-}
+.tag-select-chip { padding:5px 14px; border-radius:20px; border:1.2px solid var(--border-medium); background:var(--surface-solid); font-size:13px; color:var(--text-muted); cursor:pointer; transition:all 0.15s ease; display:inline-flex; align-items:center; font-family:inherit; line-height:1.5; }
 .tag-select-chip:hover { border-color:var(--primary); color:var(--text-main); }
-.tag-select-chip.active { border-color:var(--primary); background:var(--primary-soft); color:var(--primary); font-weight:500; }
-.tag-select-chip.active.chip-neutral { border-color:#8b8fa3; background:rgba(139,143,163,0.08); color:#6b6f85; }
-.tag-select-chip.active.chip-risk { border-color:#d48b4a; background:rgba(212,139,74,0.08); color:#b8702d; }
+.tag-select-chip.active { border-color:rgba(91,108,255,0.40); background:rgba(91,108,255,0.09); color:#3F51D1; font-weight:500; }
+.tag-select-chip.active.chip-neutral { border-color:rgba(148,163,184,0.30); background:rgba(148,163,184,0.09); color:#64748B; }
+.tag-select-chip.active.chip-risk { border-color:rgba(217,137,34,0.25); background:rgba(217,137,34,0.09); color:#C57A18; }
+
+/* Willing-again switch: teal when active */
+:deep(.el-switch.is-checked .el-switch__core) {
+  background: linear-gradient(135deg, #67D6C2, #3CBFA8) !important;
+  border-color: #3CBFA8 !important;
+}
 
 .member-chip { display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border:1px solid var(--border-soft); border-radius:var(--radius-sm); background:var(--surface-solid); gap:10px; transition:all var(--transition-base); }
 .member-chip.selectable { cursor:pointer; }

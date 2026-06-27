@@ -263,14 +263,14 @@ async function handleLogin() {
   width: 100%; margin-top: 12px; height: 52px; font-size: 16px; font-weight: 650;
   letter-spacing: 0.4px; border-radius: 16px; border: none; cursor: pointer;
   color: #fff;
-  background: linear-gradient(135deg, #5867f2 0%, #4857e8 54%, #3f4ed8 100%);
-  box-shadow: 0 16px 34px rgba(72,87,232,0.28), inset 0 1px 0 rgba(255,255,255,0.26);
+  background: linear-gradient(135deg, #6F7BFF 0%, #5567F5 55%, #4457E6 100%);
+  box-shadow: 0 16px 34px rgba(85,103,245,0.24), inset 0 1px 0 rgba(255,255,255,0.26);
   transition: all var(--transition-base);
   display: flex; align-items: center; justify-content: center;
 }
 .btn-login:hover {
   transform: translateY(-1px);
-  box-shadow: 0 20px 42px rgba(72,87,232,0.34), inset 0 1px 0 rgba(255,255,255,0.32);
+  box-shadow: 0 20px 42px rgba(85,103,245,0.28), inset 0 1px 0 rgba(255,255,255,0.32);
 }
 .btn-login:active { transform: translateY(1px); box-shadow: 0 8px 20px rgba(72,87,232,0.22); }
 .btn-login:disabled { opacity: 0.7; cursor: not-allowed; }

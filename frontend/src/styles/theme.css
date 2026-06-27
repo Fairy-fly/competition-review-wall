@@ -135,14 +135,25 @@ body {
   --el-button-border-color: var(--brand-primary);
   --el-button-hover-bg-color: var(--brand-primary-deep);
   --el-button-hover-border-color: var(--brand-primary-deep);
-  background: linear-gradient(135deg, #6674FF 0%, #4B5CF0 55%, #3D47C9 100%) !important;
+  background: linear-gradient(135deg, #6F7BFF 0%, #5567F5 55%, #4457E6 100%) !important;
   border: none !important;
-  box-shadow: 0 12px 28px rgba(75,92,240,0.22), inset 0 1px 0 rgba(255,255,255,0.22);
+  box-shadow: 0 12px 26px rgba(85,103,245,0.18), inset 0 1px 0 rgba(255,255,255,0.24);
   border-radius: 14px !important;
 }
 .el-button--primary:hover {
-  box-shadow: 0 18px 38px rgba(75,92,240,0.30), inset 0 1px 0 rgba(255,255,255,0.26);
+  box-shadow: 0 16px 32px rgba(85,103,245,0.22), inset 0 1px 0 rgba(255,255,255,0.28);
   transform: translateY(-1px);
+}
+
+/* Small action buttons (view profile, etc.) */
+.el-button--primary.el-button--small,
+.el-button--primary.is-link {
+  background: linear-gradient(135deg, rgba(111,123,255,0.92), rgba(85,103,245,0.88)) !important;
+  box-shadow: 0 4px 12px rgba(85,103,245,0.12);
+  border-radius: 10px !important;
+}
+.el-button--primary.is-link:hover {
+  box-shadow: 0 6px 18px rgba(85,103,245,0.18);
 }
 
 .el-input__wrapper,
