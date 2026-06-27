@@ -163,15 +163,21 @@ function syncForm() { Object.assign(form, { realName:userStore.currentUser?.real
 async function fetchProfile() {
   if (!userStore.currentUser?.id) return;
   try {
-    const [pr, fr] = await Promise.all([getProfile(userStore.currentUser.id), getFavorites()]);
+    const pr = await getProfile(userStore.currentUser.id);
     Object.assign(profile, pr.data);
-    favorites.value = fr.data || [];
   } catch(e) { ElMessage.error("加载画像失败：" + (e.message||"")); }
+}
+
+async function fetchFavorites() {
+  try {
+    const fr = await getFavorites();
+    favorites.value = fr.data || [];
+  } catch(e) { /* favorites non-critical, show empty state instead of error */ }
 }
 
 async function saveProfile() {
   saving.value = true;
-  try { const r = await updateCurrentUser(form); userStore.persistSession(userStore.token, r.data); syncForm(); await fetchProfile(); ElMessage.success("资料已更新"); }
+  try { const r = await updateCurrentUser(form); userStore.persistSession(userStore.token, r.data); syncForm(); await Promise.all([fetchProfile(), fetchFavorites()]); ElMessage.success("资料已更新"); }
   catch(e) { ElMessage.error(e.message); }
   finally { saving.value = false; }
 }
@@ -185,7 +191,7 @@ async function submitAppeal() {
   finally { appealSubmitting.value = false; }
 }
 
-onMounted(async () => { syncForm(); await fetchProfile(); });
+onMounted(async () => { syncForm(); await Promise.all([fetchProfile(), fetchFavorites()]); });
 </script>
 
 <style scoped>

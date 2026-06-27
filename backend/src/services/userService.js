@@ -85,8 +85,14 @@ async function lookupUser(studentNo) {
 }
 
 async function getFavorites(userId) {
-  const favorites = await favoriteDao.listFavoritesByUserId(userId);
-  return attachTopTags(favorites, 3);
+  try {
+    const favorites = await favoriteDao.listFavoritesByUserId(userId);
+    return attachTopTags(favorites, 3);
+  } catch (error) {
+    // Table may not exist yet on production — degrade gracefully
+    console.error("getFavorites error:", error.message);
+    return [];
+  }
 }
 
 async function addFavorite(userId, targetUserId) {
