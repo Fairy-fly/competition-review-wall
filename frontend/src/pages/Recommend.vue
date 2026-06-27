@@ -182,7 +182,7 @@ onMounted(async () => { if (!userStore.currentUser) { try { await userStore.fetc
 .rec-field { display:flex; justify-content:space-between; font-size:14px; color:var(--text-muted); }
 .rec-f-label { color:var(--text-faint); }
 .rec-f-hi { font-weight:600; color:var(--teal); }
-.rec-tags { min-height:28px; max-height:84px; overflow:hidden; }
+.rec-tags { min-height:28px; max-height:100px; overflow:hidden; }
 .rec-actions { margin-top:auto; display:flex; justify-content:flex-end; padding-top:4px; }
 .empty-placeholder { padding:52px; text-align:center; color:var(--text-faint); }
 .empty-icon-box {

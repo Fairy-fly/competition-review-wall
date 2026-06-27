@@ -25,51 +25,55 @@ defineProps({
   display: flex;
   flex-wrap: wrap;
   gap: 7px;
-  max-height: 96px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .tag-chip {
   display: inline-flex;
   align-items: center;
-  gap: 2px;
-  padding: 4px 12px;
-  border-radius: 20px;
+  box-sizing: border-box;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 999px;
   font-size: 12px;
   font-weight: 500;
-  line-height: 1.5;
+  line-height: 1;
   white-space: nowrap;
-  transition: all 0.18s ease;
+  flex: 0 0 auto;
+  border: 1.4px solid;
+  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
   cursor: default;
 }
 
 .tag-positive {
   background: rgba(59, 130, 176, 0.10);
   color: #1e5a7a;
-  border: 1.4px solid rgba(59, 130, 176, 0.35);
+  border-color: rgba(59, 130, 176, 0.35);
 }
 
 .tag-neutral {
   background: rgba(100, 116, 139, 0.08);
   color: #4a5568;
-  border: 1.4px solid rgba(100, 116, 139, 0.30);
+  border-color: rgba(100, 116, 139, 0.30);
 }
 
 .tag-risk {
   background: rgba(212, 139, 74, 0.10);
   color: #a45d1e;
-  border: 1.4px solid rgba(212, 139, 74, 0.35);
+  border-color: rgba(212, 139, 74, 0.35);
 }
 
 .tag-chip:hover {
   transform: none;
-  border-color: currentColor;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  background: rgba(79, 99, 246, 0.10);
+  border-color: rgba(79, 99, 246, 0.40);
+  box-shadow: 0 2px 8px rgba(79, 99, 246, 0.10);
 }
 
 .tag-count {
-  opacity: 0.6;
+  opacity: 0.55;
   font-weight: 400;
+  margin-left: 1px;
 }
 
 .empty {

@@ -446,7 +446,7 @@ onMounted(async () => {
 .preview-key-label { font-size: 11px; color: var(--text-faint); }
 .preview-key-value { font-size: 22px; font-weight: 700; color: var(--teal); }
 .preview-tags { display: flex; gap: 6px; }
-.preview-chip { padding: 3px 10px; border-radius: 14px; font-size: 11px; font-weight: 500; border: 1.2px solid; }
+.preview-chip { display:inline-flex; align-items:center; height:26px; padding:0 10px; border-radius:999px; font-size:11px; font-weight:500; border:1.2px solid; line-height:1; box-sizing:border-box; white-space:nowrap; }
 .preview-chip.positive { background: rgba(59,130,176,0.10); color: #1e5a7a; border-color: rgba(59,130,176,0.35); }
 .preview-chip.neutral { background: rgba(100,116,139,0.08); color: #4a5568; border-color: rgba(100,116,139,0.30); }
 
