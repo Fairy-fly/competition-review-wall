@@ -502,15 +502,54 @@ function renderMajorChart() {
   });
 }
 
+function formatDateLabel(dateStr) {
+  if (!dateStr) return "";
+  const d = new Date(dateStr);
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${m}/${day}`;
+}
+
+function formatDateFull(dateStr) {
+  if (!dateStr) return "";
+  const d = new Date(dateStr);
+  return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
+}
+
 function renderTrendChart() {
   if (!trendChartRef.value || !adminStats.reviewTrend.length) return;
   const chart = echarts.init(trendChartRef.value);
   chart.setOption({
-    tooltip: { trigger: "axis" },
-    grid: { left: 40, right: 20, top: 10, bottom: 20 },
-    xAxis: { type: "category", data: adminStats.reviewTrend.map((d) => d.date) },
-    yAxis: { type: "value", minInterval: 1 },
-    series: [{ type: "line", data: adminStats.reviewTrend.map((d) => d.count), smooth: true, itemStyle: { color: "#2563eb" } }]
+    tooltip: {
+      trigger: "axis",
+      backgroundColor: "#fff",
+      borderColor: "rgba(148,163,184,0.2)",
+      textStyle: { color: "#0f172a", fontSize: 13 },
+      formatter: (p) => {
+        const d = p[0];
+        return `${formatDateFull(d.name)}<br/>评价数 <b>${d.value}</b>`;
+      }
+    },
+    grid: { left: 42, right: 24, top: 12, bottom: 22 },
+    xAxis: {
+      type: "category", data: adminStats.reviewTrend.map(d => formatDateLabel(d.date)),
+      axisLine: { show: false }, axisTick: { show: false },
+      axisLabel: { color: "#94a3b8", fontSize: 11 }
+    },
+    yAxis: {
+      type: "value", minInterval: 1,
+      axisLine: { show: false }, axisTick: { show: false },
+      splitLine: { lineStyle: { color: "#f1f5f9" } }
+    },
+    series: [{
+      type: "line", data: adminStats.reviewTrend.map(d => d.count),
+      smooth: true, lineStyle: { color: "#4B5CF0", width: 2.5 },
+      itemStyle: { color: "#4B5CF0" },
+      areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+        { offset: 0, color: "rgba(75,92,240,0.10)" }, { offset: 1, color: "rgba(75,92,240,0.01)" }
+      ])},
+      symbol: "circle", symbolSize: 5, emphasis: { symbolSize: 7 }
+    }]
   });
 }
 

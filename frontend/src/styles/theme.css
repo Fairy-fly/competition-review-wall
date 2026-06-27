@@ -2,8 +2,8 @@
 
 :root {
   /* ---- Brand Palette ---- */
-  --brand-primary:       #5B6CFF;
-  --brand-primary-deep:  #4453E6;
+  --brand-primary:       #4B5CF0;
+  --brand-primary-deep:  #27336F;
   --brand-primary-soft:  #E8ECFF;
 
   --brand-teal:          #18A999;
@@ -43,8 +43,8 @@
   --text-muted:      var(--brand-muted);
   --text-faint:      var(--brand-faint);
   --surface:          rgba(255, 255, 255, 0.85);
-  --border-soft:      rgba(148, 163, 184, 0.20);
-  --border-medium:    rgba(148, 163, 184, 0.28);
+  --border-soft:      rgba(96, 115, 180, 0.12);
+  --border-medium:    rgba(96, 115, 180, 0.20);
 
   /* ---- Shadows ---- */
   --shadow-card:      0 16px 40px rgba(15, 23, 42, 0.06);
@@ -65,7 +65,7 @@
   --sidebar-collapsed:  72px;
   --sidebar-bg:         #0B1220;
   --sidebar-text:       #8B99B0;
-  --sidebar-active:     #5B6CFF;
+  --sidebar-active:     #4B5CF0;
   --sidebar-hover:      rgba(255,255,255,0.05);
 
   /* ---- Typography ---- */
@@ -78,8 +78,8 @@
 /* ---- Page Background ---- */
 body {
   background:
-    radial-gradient(ellipse 65% 55% at 15% 5%, rgba(91,108,255,0.07) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 85% 90%, rgba(24,169,153,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 40% at 18% 5%, rgba(75,92,240,0.05) 0%, transparent 55%),
+    radial-gradient(ellipse 55% 35% at 88% 25%, rgba(24,169,153,0.04) 0%, transparent 50%),
     var(--page-bg);
   background-attachment: fixed;
 }
@@ -135,9 +135,15 @@ body {
   --el-button-border-color: var(--brand-primary);
   --el-button-hover-bg-color: var(--brand-primary-deep);
   --el-button-hover-border-color: var(--brand-primary-deep);
-  box-shadow: var(--shadow-btn);
+  background: linear-gradient(135deg, #6674FF 0%, #4B5CF0 55%, #3D47C9 100%) !important;
+  border: none !important;
+  box-shadow: 0 12px 28px rgba(75,92,240,0.22), inset 0 1px 0 rgba(255,255,255,0.22);
+  border-radius: 14px !important;
 }
-.el-button--primary:hover { box-shadow: 0 14px 32px rgba(91,108,255,0.30); }
+.el-button--primary:hover {
+  box-shadow: 0 18px 38px rgba(75,92,240,0.30), inset 0 1px 0 rgba(255,255,255,0.26);
+  transform: translateY(-1px);
+}
 
 .el-input__wrapper,
 .el-select .el-input__wrapper {

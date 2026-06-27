@@ -139,26 +139,27 @@ async function handleLogin() {
 /* ===== Full-screen ===== */
 .login-page {
   min-height: 100dvh;
+  height: 100dvh;
   display: flex;
   position: relative;
   overflow: hidden;
   background:
-    radial-gradient(ellipse 70% 50% at 12% 20%, rgba(91,108,255,0.10) 0%, transparent 50%),
-    radial-gradient(ellipse 60% 40% at 85% 75%, rgba(24,169,153,0.07) 0%, transparent 50%),
+    radial-gradient(ellipse 70% 50% at 12% 20%, rgba(75,92,240,0.09) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 85% 75%, rgba(24,169,153,0.06) 0%, transparent 50%),
     linear-gradient(155deg, #f7f9ff 0%, #eef4fc 45%, #f8fbff 100%);
 }
 
 /* ---- Ambient orbs ---- */
 .amb-orbs { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
 .amb-orb { position: absolute; border-radius: 50%; filter: blur(120px); }
-.ao-1 { width: 460px; height: 460px; background: rgba(91,108,255,0.05); top: -10%; left: -4%; animation: driftA 16s ease-in-out infinite; }
+.ao-1 { width: 460px; height: 460px; background: rgba(75,92,240,0.05); top: -10%; left: -4%; animation: driftA 16s ease-in-out infinite; }
 .ao-2 { width: 340px; height: 340px; background: rgba(24,169,153,0.04); bottom: 8%; right: -6%; animation: driftB 18s ease-in-out infinite; }
-.ao-3 { width: 240px; height: 240px; background: rgba(91,108,255,0.03); top: 50%; left: 60%; animation: driftA 20s ease-in-out infinite reverse; }
+.ao-3 { width: 240px; height: 240px; background: rgba(75,92,240,0.03); top: 50%; left: 60%; animation: driftA 20s ease-in-out infinite reverse; }
 @keyframes driftA { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(24px,-16px) scale(1.04)} 66%{transform:translate(-18px,14px) scale(0.96)} }
 @keyframes driftB { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-22px,20px) scale(1.05)} }
 
-/* ---- Network background ---- */
-.login-network { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: 0.6; }
+/* ===== Network background ===== */
+.login-network { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: 0.55; }
 .nn { animation: nodePulse 4s ease-in-out infinite; }
 .nn-2 { animation-delay: 0.6s; } .nn-3 { animation-delay: 1.2s; } .nn-4 { animation-delay: 1.8s; } .nn-5 { animation-delay: 2.4s; } .nn-6 { animation-delay: 3s; }
 @keyframes nodePulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
@@ -167,13 +168,13 @@ async function handleLogin() {
 .login-hero {
   flex: 58;
   display: flex; align-items: center;
-  padding: 56px 60px 56px 80px;
+  padding: clamp(32px, 5vw, 56px) clamp(40px, 6vw, 80px);
   position: relative; z-index: 1;
 }
 .login-hero::after {
   content: ""; position: absolute; right: 0; top: 10%; bottom: 10%;
   width: 1px;
-  background: linear-gradient(180deg, transparent, rgba(91,108,255,0.10), rgba(24,169,153,0.06), transparent);
+  background: linear-gradient(180deg, transparent, rgba(75,92,240,0.10), rgba(24,169,153,0.06), transparent);
 }
 
 .hero-inner {
@@ -183,26 +184,26 @@ async function handleLogin() {
 }
 @keyframes heroIn { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
 
-.hero-brand { display: flex; align-items: center; gap: 16px; margin-bottom: 40px; }
+.hero-brand { display: flex; align-items: center; gap: 16px; margin-bottom: clamp(24px, 3vw, 40px); }
 .hero-brand-text { display: flex; flex-direction: column; gap: 1px; }
 .hero-brand-text strong { font-size: 17px; color: var(--brand-ink); font-weight: 650; }
 .hero-brand-text span { font-size: 11px; color: var(--brand-faint); letter-spacing: 0.6px; }
 
 /* Headline */
 .hero-headline { margin: 0; }
-.hl-line { display: block; font-size: 68px; font-weight: 800; color: var(--brand-ink); letter-spacing: -2.8px; line-height: 1.06; }
+.hl-line { display: block; font-size: clamp(48px, 5.2vw, 68px); font-weight: 800; color: var(--brand-ink); letter-spacing: -2.8px; line-height: 1.06; }
 .hl-grad {
   background: linear-gradient(135deg, #4b5cf0, #6d5dfc);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-.hero-desc { margin: 22px 0 0; color: #5f6f89; font-size: 16px; line-height: 1.75; max-width: 500px; }
+.hero-desc { margin: clamp(14px, 1.5vw, 22px) 0 0; color: #5f6f89; font-size: 16px; line-height: 1.75; max-width: 500px; }
 
 /* Feature cards */
-.hero-features { display: grid; gap: 8px; margin-top: 32px; }
+.hero-features { display: grid; gap: clamp(6px, 0.6vw, 8px); margin-top: clamp(20px, 2.5vw, 32px); }
 .hf-card {
   display: flex; gap: 14px; align-items: flex-start;
-  padding: 14px 16px; border-radius: var(--radius-md);
+  padding: clamp(10px, 1vw, 14px) 16px; border-radius: var(--radius-md);
   border: 1px solid rgba(148,163,184,0.14);
   background: rgba(255,255,255,0.52);
   backdrop-filter: blur(10px);
@@ -211,7 +212,7 @@ async function handleLogin() {
   transition: all var(--transition-base);
 }
 .hf-card:hover {
-  border-color: rgba(91,108,255,0.22);
+  border-color: rgba(75,92,240,0.22);
   background: rgba(255,255,255,0.85);
   box-shadow: var(--shadow-sm);
   transform: translateX(4px);
@@ -219,21 +220,21 @@ async function handleLogin() {
 .hf-card strong { display: block; font-size: 14px; color: var(--brand-ink); margin-bottom: 1px; }
 .hf-card p { margin: 0; font-size: 12px; color: var(--brand-muted); line-height: 1.5; }
 .hf-icon { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; flex-shrink: 0; border: 1px solid rgba(0,0,0,0.04); }
-.hf-icon-a { background: rgba(91,108,255,0.08); color: var(--brand-primary); }
+.hf-icon-a { background: rgba(75,92,240,0.08); color: #4B5CF0; }
 .hf-icon-b { background: rgba(24,169,153,0.08); color: var(--brand-teal); }
 .hf-icon-c { background: rgba(217,145,59,0.08); color: var(--brand-amber); }
 
 /* Metrics */
-.hero-metrics { display: flex; gap: 44px; margin-top: 36px; }
+.hero-metrics { display: flex; gap: clamp(24px, 3vw, 44px); margin-top: clamp(20px, 2.5vw, 36px); }
 .hm { display: flex; flex-direction: column; gap: 2px; }
-.hm-num { font-size: 30px; font-weight: 700; color: var(--brand-ink); letter-spacing: -0.4px; }
+.hm-num { font-size: clamp(24px, 2.4vw, 30px); font-weight: 700; color: var(--brand-ink); letter-spacing: -0.4px; }
 .hm-lbl { font-size: 12px; color: var(--brand-faint); }
 
 /* ===== Right Login Panel 42% ===== */
 .login-panel {
   flex: 42;
   display: flex; align-items: center; justify-content: center;
-  padding: 56px 48px;
+  padding: clamp(24px, 4vw, 56px) clamp(24px, 3vw, 48px);
   position: relative; z-index: 1;
 }
 
@@ -248,9 +249,9 @@ async function handleLogin() {
   animation: heroIn 560ms ease 180ms both;
 }
 
-.panel-inner { padding: 40px 36px; }
+.panel-inner { padding: clamp(28px, 3vw, 40px) clamp(24px, 2.5vw, 36px); }
 
-.panel-head { margin-bottom: 32px; }
+.panel-head { margin-bottom: clamp(22px, 2.5vw, 32px); }
 .panel-head h2 { margin: 0; font-size: 28px; font-weight: 750; color: var(--brand-ink); letter-spacing: -0.4px; }
 .panel-head p { margin: 8px 0 0; color: var(--brand-muted); font-size: 14px; line-height: 1.5; }
 
