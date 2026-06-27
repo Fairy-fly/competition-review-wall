@@ -37,9 +37,19 @@ async function hideReview(req, res, next) {
   }
 }
 
+async function resetPassword(req, res, next) {
+  try {
+    const data = await adminService.resetPassword(req.user, Number(req.params.id), req.body.password);
+    sendSuccess(res, data, "密码重置成功");
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   getProjects,
   getReviews,
   getUsers,
-  hideReview
+  hideReview,
+  resetPassword
 };

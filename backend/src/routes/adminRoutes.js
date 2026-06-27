@@ -11,5 +11,6 @@ router.get("/users", adminController.getUsers);
 router.get("/projects", adminController.getProjects);
 router.get("/reviews", adminController.getReviews);
 router.put("/reviews/:id/hide", adminController.hideReview);
+router.put("/users/:id/reset-password", adminController.resetPassword);
 
 module.exports = router;

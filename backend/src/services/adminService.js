@@ -1,3 +1,4 @@
+const bcrypt = require("bcryptjs");
 const projectService = require("./projectService");
 const reviewDao = require("../dao/reviewDao");
 const userDao = require("../dao/userDao");
@@ -46,9 +47,27 @@ async function hideReview(currentUser, reviewId, reason) {
   return camelizeReview(updated, { includeReviewerName: true, includeReviewerId: true });
 }
 
+async function resetPassword(currentUser, targetUserId, newPassword) {
+  if (!newPassword || String(newPassword).length < 6) {
+    throw new AppError("新密码长度不能少于 6 位");
+  }
+
+  const user = await userDao.findById(targetUserId);
+  if (!user) {
+    throw new AppError("用户不存在", 404);
+  }
+
+  const hash = await bcrypt.hash(String(newPassword), 10);
+  await userDao.updatePassword(targetUserId, hash);
+  await logOperation(currentUser.userId, "admin.resetPassword", `targetUserId=${targetUserId}, user=${user.real_name}`);
+
+  return { userId: targetUserId, realName: user.real_name };
+}
+
 module.exports = {
   getProjects,
   getReviews,
   getUsers,
-  hideReview
+  hideReview,
+  resetPassword
 };

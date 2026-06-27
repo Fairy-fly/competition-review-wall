@@ -52,6 +52,12 @@
             </el-table-column>
             <el-table-column prop="projectCount" label="项目数" width="90" />
             <el-table-column prop="reviewCount" label="评价数" width="90" />
+            <el-table-column label="密码" width="160">
+              <template #default="{ row }">
+                <span style="color:var(--text-faint)">********</span>
+                <el-button type="warning" link size="small" style="margin-left:8px" @click="showPwdDialog(row)">重置</el-button>
+              </template>
+            </el-table-column>
           </el-table>
         </el-tab-pane>
 
@@ -293,6 +299,22 @@
         </el-button>
       </template>
     </el-dialog>
+
+    <!-- Reset password dialog -->
+    <el-dialog v-model="pwdDialogVisible" title="重置密码" width="400px" :close-on-click-modal="false">
+      <el-form label-width="80px">
+        <el-form-item label="用户">
+          <span>{{ pwdForm.realName }}（{{ pwdForm.studentNo }}）</span>
+        </el-form-item>
+        <el-form-item label="新密码" required>
+          <el-input v-model="pwdForm.password" type="password" show-password placeholder="至少 6 位" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="pwdDialogVisible = false">取消</el-button>
+        <el-button type="primary" :loading="pwdSubmitting" @click="confirmResetPassword">确认重置</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -301,7 +323,7 @@ import { computed, nextTick, onMounted, reactive, ref, watch } from "vue";
 import { ElMessage } from "element-plus";
 import * as echarts from "echarts";
 
-import { getAdminProjects, getAdminReviews, getAdminUsers, hideReview } from "@/api/adminApi";
+import { getAdminProjects, getAdminReviews, getAdminUsers, hideReview, resetPassword } from "@/api/adminApi";
 import { getAppeals, processAppeal } from "@/api/appealApi";
 import { getAdminStats, getDashboardSummary } from "@/api/dashboardApi";
 import ReviewList from "@/components/ReviewList.vue";
@@ -364,6 +386,14 @@ const hideForm = reactive({
 });
 
 const appealProcessVisible = ref(false);
+const pwdDialogVisible = ref(false);
+const pwdSubmitting = ref(false);
+const pwdForm = reactive({
+  userId: null,
+  realName: "",
+  studentNo: "",
+  password: ""
+});
 const appealProcessForm = reactive({
   appealId: null,
   action: "approved",
@@ -574,6 +604,32 @@ async function confirmAppealProcess() {
     ElMessage.error(error.message || "处理失败");
   } finally {
     processingAppeal.value = false;
+  }
+}
+
+/* ---- Password reset ---- */
+function showPwdDialog(row) {
+  pwdForm.userId = row.id;
+  pwdForm.realName = row.realName;
+  pwdForm.studentNo = row.studentNo;
+  pwdForm.password = "";
+  pwdDialogVisible.value = true;
+}
+
+async function confirmResetPassword() {
+  if (pwdForm.password.length < 6) {
+    ElMessage.warning("新密码长度不能少于 6 位");
+    return;
+  }
+  pwdSubmitting.value = true;
+  try {
+    await resetPassword(pwdForm.userId, { password: pwdForm.password });
+    pwdDialogVisible.value = false;
+    ElMessage.success(`已重置 ${pwdForm.realName} 的密码`);
+  } catch (error) {
+    ElMessage.error(error.message);
+  } finally {
+    pwdSubmitting.value = false;
   }
 }
 

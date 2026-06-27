@@ -29,6 +29,13 @@ async function updateUser(userId, payload) {
   );
 }
 
+async function updatePassword(userId, hashedPassword) {
+  await query(
+    "UPDATE users SET password = ?, updated_at = NOW() WHERE id = ?",
+    [hashedPassword, userId]
+  );
+}
+
 async function listWallUsers(filters = {}) {
   const conditions = ["u.role = 'student'"];
   const whereValues = [];
@@ -155,5 +162,6 @@ module.exports = {
   getWallSummary,
   listAdminUsers,
   listWallUsers,
-  updateUser
+  updateUser,
+  updatePassword
 };

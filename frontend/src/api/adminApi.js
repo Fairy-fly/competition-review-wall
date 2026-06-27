@@ -15,3 +15,7 @@ export function getAdminReviews(params) {
 export function hideReview(id, data) {
   return http.put(`/admin/reviews/${id}/hide`, data);
 }
+
+export function resetPassword(id, data) {
+  return http.put(`/admin/users/${id}/reset-password`, data);
+}
