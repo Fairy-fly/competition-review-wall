@@ -13,7 +13,7 @@
       <!-- Left: Showcase -->
       <section class="login-showcase">
         <div class="showcase-brand">
-          <BrandLogo :size="52" />
+          <img src="/brand-logo.png" alt="竞赛队友测评墙" class="showcase-logo" />
           <div class="brand-text">
             <strong>竞赛队友测评墙</strong>
             <span>课程设计 Demo</span>
@@ -104,7 +104,6 @@ import { reactive, ref } from "vue";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 import { Hide, DataAnalysis, Connection, UserFilled, Lock, InfoFilled } from "@element-plus/icons-vue";
-import BrandLogo from "@/components/BrandLogo.vue";
 import { useUserStore } from "@/store/user";
 
 const router = useRouter();
@@ -194,7 +193,7 @@ async function handleLogin() {
 }
 
 .showcase-brand { display: flex; align-items: center; gap: 14px; margin-bottom: 32px; }
-.brand-mark { width: 44px; height: 44px; border-radius: 10px; background: var(--primary); display: grid; place-items: center; color: #fff; font-weight: 700; font-size: 18px; flex-shrink: 0; }
+.showcase-logo { width: 52px; height: 52px; border-radius: 10px; flex-shrink: 0; }
 .brand-text { display: flex; flex-direction: column; gap: 2px; }
 .brand-text strong { font-size: 17px; color: var(--text-main); }
 .brand-text span { font-size: 12px; color: var(--text-faint); }
