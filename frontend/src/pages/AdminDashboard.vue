@@ -345,6 +345,11 @@ const overview = reactive({
   usersWithoutReviews: 0
 });
 
+const dashboard = reactive({
+  topUsers: [],
+  hotTags: []
+});
+
 const reviewFilters = reactive({
   projectId: undefined,
   status: undefined,
