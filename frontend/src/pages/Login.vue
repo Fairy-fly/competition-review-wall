@@ -263,7 +263,7 @@ async function handleLogin() {
   width: 100%; margin-top: 12px; height: 52px; font-size: 16px; font-weight: 650;
   letter-spacing: 0.4px; border-radius: 16px; border: none; cursor: pointer;
   color: #fff;
-  background: linear-gradient(135deg, #6F7BFF 0%, #5567F5 55%, #4457E6 100%);
+  background: linear-gradient(135deg, #6470F7 0%, #4F5FEA 100%);
   box-shadow: 0 16px 34px rgba(85,103,245,0.24), inset 0 1px 0 rgba(255,255,255,0.26);
   transition: all var(--transition-base);
   display: flex; align-items: center; justify-content: center;

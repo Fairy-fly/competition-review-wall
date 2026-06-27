@@ -32,42 +32,44 @@ defineProps({
   display: inline-flex;
   align-items: center;
   box-sizing: border-box;
-  height: 28px;
-  padding: 0 12px;
+  min-height: 26px;
+  height: auto;
+  padding: 5px 11px;
   border-radius: 999px;
   font-size: 12px;
   font-weight: 500;
-  line-height: 1;
+  line-height: 1.2;
   white-space: nowrap;
   flex: 0 0 auto;
-  border: 1.4px solid;
+  border-width: 1px;
+  border-style: solid;
   transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
   cursor: default;
 }
 
 .tag-positive {
-  background: rgba(91,108,255,0.09);
-  color: #3F51D1;
-  border-color: rgba(91,108,255,0.24);
+  background: rgba(91,108,255,0.08);
+  color: #5360D8;
+  border-color: rgba(91,108,255,0.22);
 }
 
 .tag-neutral {
-  background: rgba(148,163,184,0.09);
+  background: rgba(100,116,139,0.08);
   color: #64748B;
-  border-color: rgba(148,163,184,0.20);
+  border-color: rgba(100,116,139,0.18);
 }
 
 .tag-risk {
-  background: rgba(217,137,34,0.09);
-  color: #C57A18;
-  border-color: rgba(217,137,34,0.22);
+  background: rgba(239,68,68,0.06);
+  color: #C24141;
+  border-color: rgba(239,68,68,0.16);
 }
 
 .tag-chip:hover {
   transform: none;
   background: rgba(91,108,255,0.12);
-  border-color: rgba(91,108,255,0.32);
-  box-shadow: 0 2px 8px rgba(91,108,255,0.08);
+  border-color: rgba(91,108,255,0.28);
+  box-shadow: 0 2px 8px rgba(91,108,255,0.06);
 }
 
 .tag-count {

@@ -248,7 +248,11 @@ async function loadDashboardData() {
     dashboard.topUsers = summary.data.topUsers || [];
     dashboard.hotTags = summary.data.hotTags || [];
     Object.assign(adminStats, stats.data);
+    // Hide overlay FIRST, then wait for DOM update, THEN render chart with visible animation
     chartsLoading.value = false;
+    await nextTick();
+    await new Promise(r => requestAnimationFrame(r));
+    await new Promise(r => requestAnimationFrame(r));
     renderAllCharts();
   } catch { chartsLoading.value = false; chartsError.value = true; }
 }

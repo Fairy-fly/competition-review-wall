@@ -135,13 +135,14 @@ body {
   --el-button-border-color: var(--brand-primary);
   --el-button-hover-bg-color: var(--brand-primary-deep);
   --el-button-hover-border-color: var(--brand-primary-deep);
-  background: linear-gradient(135deg, #6F7BFF 0%, #5567F5 55%, #4457E6 100%) !important;
+  background: linear-gradient(135deg, #6470F7 0%, #4F5FEA 100%) !important;
   border: none !important;
-  box-shadow: 0 12px 26px rgba(85,103,245,0.18), inset 0 1px 0 rgba(255,255,255,0.24);
+  box-shadow: 0 10px 24px rgba(79,95,234,0.22);
   border-radius: 14px !important;
 }
 .el-button--primary:hover {
-  box-shadow: 0 16px 32px rgba(85,103,245,0.22), inset 0 1px 0 rgba(255,255,255,0.28);
+  background: linear-gradient(135deg, #5D68F0 0%, #4656DD 100%) !important;
+  box-shadow: 0 14px 30px rgba(79,95,234,0.26);
   transform: translateY(-1px);
 }
 
@@ -150,21 +151,22 @@ body {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
-  color: #4352d8 !important;
+  color: #5360D8 !important;
   font-weight: 600;
   padding: 4px 8px !important;
   border-radius: 6px !important;
 }
 .el-button--primary.is-link:hover {
-  background: rgba(91,108,255,0.09) !important;
-  color: #3442c4 !important;
+  background: rgba(91,108,255,0.08) !important;
+  color: #4451C4 !important;
   box-shadow: none !important;
+  transform: none;
 }
 
 /* Small solid primary buttons */
 .el-button--primary.el-button--small:not(.is-link) {
-  background: linear-gradient(135deg, #6F7BFF 0%, #5567F5 55%, #4457E6 100%) !important;
-  box-shadow: 0 6px 16px rgba(85,103,245,0.14);
+  background: linear-gradient(135deg, #6470F7 0%, #4F5FEA 100%) !important;
+  box-shadow: 0 4px 12px rgba(79,95,234,0.14);
   border-radius: 12px !important;
 }
 
