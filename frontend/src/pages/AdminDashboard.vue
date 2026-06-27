@@ -447,12 +447,12 @@ function renderTagChart() {
       textStyle: { color: "#0f172a", fontSize: 13 },
       formatter: (p) => `${p[0].name}<br/><b>${p[0].value}</b> 次`
     },
-    grid: { left: 100, right: 24, top: 8, bottom: 20 },
+    grid: { left: 90, right: 20, top: 10, bottom: 24 },
     xAxis: { type: "value", axisLine: { show: false }, axisTick: { show: false }, splitLine: { lineStyle: { color: "#f1f5f9" } } },
     yAxis: {
       type: "category", data: dashboard.hotTags.map(t => t.displayName).reverse(), inverse: true,
       axisLine: { show: false }, axisTick: { show: false },
-      axisLabel: { color: "#64748b", fontSize: 13 }
+      axisLabel: { color: "#64748b", fontSize: 12, margin: 12 }
     },
     series: [{
       type: "bar",
@@ -480,12 +480,12 @@ function renderMajorChart() {
       textStyle: { color: "#0f172a", fontSize: 13 },
       formatter: (p) => `${p[0].name}<br/>平均 <b>${p[0].value}</b> 分`
     },
-    grid: { left: 90, right: 24, top: 8, bottom: 20 },
+    grid: { left: 85, right: 20, top: 10, bottom: 24 },
     xAxis: { type: "value", max: 5, axisLine: { show: false }, axisTick: { show: false }, splitLine: { lineStyle: { color: "#f1f5f9" } } },
     yAxis: {
       type: "category", data: adminStats.byMajor.map(m => m.major).reverse(), inverse: true,
       axisLine: { show: false }, axisTick: { show: false },
-      axisLabel: { color: "#64748b", fontSize: 13 }
+      axisLabel: { color: "#64748b", fontSize: 12, margin: 12 }
     },
     series: [{
       type: "bar",
@@ -708,13 +708,14 @@ onMounted(async () => {
 
 .chart-box {
   width: 100%;
-  height: 260px;
+  height: 240px;
 }
 
 .panel-title {
   margin-bottom: 12px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 650;
+  color: var(--text-main);
+  font-size: 15px;
 }
 
 .empty-placeholder {
@@ -724,7 +725,7 @@ onMounted(async () => {
 }
 
 .empty-chart {
-  height: 260px;
+  height: 240px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -732,6 +733,6 @@ onMounted(async () => {
   gap: 8px;
   color: var(--text-faint);
 }
-.empty-chart span { font-size: 15px; font-weight: 600; color: var(--text-muted); }
+.empty-chart span { font-size: 14px; font-weight: 600; color: var(--text-muted); }
 .empty-chart small { font-size: 12px; color: var(--text-faint); }
 </style>

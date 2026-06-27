@@ -195,6 +195,8 @@ onMounted(async () => { syncForm(); await Promise.all([fetchProfile(), fetchFavo
 </script>
 
 <style scoped>
+/* Override grid stretch to prevent forced equal-height columns */
+.two-col-grid { align-items: start; }
 .hero-banner { display:flex; gap:36px; align-items:center; padding:32px 40px; margin-bottom:24px; background:var(--surface-solid); border:1px solid var(--border-soft); border-radius:var(--radius-xl); box-shadow:var(--shadow-card); }
 .hero-left { flex:1; }
 .hero-right { min-width:300px; }
@@ -215,5 +217,5 @@ onMounted(async () => { syncForm(); await Promise.all([fetchProfile(), fetchFavo
 .role-chip { border:1px solid var(--primary-soft); border-radius:var(--radius-sm); background:var(--primary-soft); padding:10px 14px; display:flex; flex-direction:column; gap:2px; }
 .role-name { font-weight:600; color:var(--primary-dark); font-size:14px; }
 .role-reason { color:var(--text-faint); font-size:12px; }
-.empty-placeholder { padding:24px; text-align:center; color:var(--text-faint); font-size:14px; }
+.empty-placeholder { padding:20px; text-align:center; color:var(--text-faint); font-size:14px; }
 </style>
