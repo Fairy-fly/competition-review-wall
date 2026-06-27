@@ -29,18 +29,23 @@
       <div class="hero-right">
         <!-- Profile Preview Card -->
         <div class="hero-preview motion-card">
-          <div class="preview-radar-hint">
-            <div class="preview-ring"></div>
-            <div class="preview-label">协作画像预览</div>
+          <div class="preview-head">
+            <span class="preview-badge">协作画像预览</span>
+          </div>
+          <div class="preview-core">
+            <div class="preview-ring-wrap">
+              <div class="preview-ring"></div>
+              <span class="preview-ring-score">4.1</span>
+            </div>
+            <div class="preview-key">
+              <span class="preview-key-label">再次组队率</span>
+              <strong class="preview-key-value">82%</strong>
+            </div>
           </div>
           <div class="preview-tags">
             <span class="preview-chip positive">靠谱</span>
             <span class="preview-chip positive">执行力强</span>
             <span class="preview-chip neutral">沟通顺畅</span>
-          </div>
-          <div class="preview-stat">
-            <span class="preview-stat-label">再次组队率</span>
-            <strong class="preview-stat-value">82%</strong>
           </div>
         </div>
 
@@ -408,33 +413,42 @@ onMounted(async () => {
 
 /* Preview card */
 .hero-preview {
-  background: linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%);
-  border: 1px solid var(--border-soft);
+  background: linear-gradient(145deg, #fafbff 0%, #f5f7ff 100%);
+  border: 1px solid rgba(79, 99, 246, 0.14);
   border-radius: var(--radius-lg);
-  padding: 24px;
+  padding: 20px 22px;
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 14px;
-  min-height: 160px;
-  justify-content: center;
+  min-width: 200px;
+}
+.preview-head { display: flex; align-items: center; }
+.preview-badge {
+  font-size: 12px; font-weight: 600; color: var(--primary);
+  background: rgba(79,99,246,0.08); padding: 3px 12px; border-radius: 20px;
+}
+.preview-core { display: flex; align-items: center; gap: 18px; }
+.preview-ring-wrap {
+  width: 58px; height: 58px; border-radius: 50%;
+  background: rgba(79,99,246,0.06); border: 2px solid rgba(79,99,246,0.15);
+  display: grid; place-items: center; position: relative; flex-shrink: 0;
 }
 .preview-ring {
-  width: 64px; height: 64px;
-  border-radius: 50%;
-  border: 3px solid var(--primary);
-  border-top-color: transparent;
-  border-right-color: transparent;
-  opacity: 0.4;
+  position: absolute; inset: -2px; border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: var(--primary);
+  border-right-color: var(--primary);
+  opacity: 0.4; animation: spin 4s linear infinite;
 }
-.preview-label { font-size: 13px; color: var(--text-muted); margin-top: 6px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.preview-ring-score { font-size: 18px; font-weight: 700; color: var(--primary); }
+.preview-key { display: flex; flex-direction: column; gap: 2px; }
+.preview-key-label { font-size: 11px; color: var(--text-faint); }
+.preview-key-value { font-size: 22px; font-weight: 700; color: var(--teal); }
 .preview-tags { display: flex; gap: 6px; }
-.preview-chip { padding: 3px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; }
-.preview-chip.positive { background: var(--primary-soft); color: var(--primary); }
-.preview-chip.neutral { background: #f1f5f9; color: var(--text-muted); }
-.preview-stat { text-align: center; }
-.preview-stat-label { font-size: 12px; color: var(--text-faint); }
-.preview-stat-value { font-size: 28px; color: var(--teal); font-weight: 700; }
+.preview-chip { padding: 3px 10px; border-radius: 14px; font-size: 11px; font-weight: 500; border: 1px solid; }
+.preview-chip.positive { background: rgba(59,130,176,0.07); color: #256c95; border-color: rgba(59,130,176,0.22); }
+.preview-chip.neutral { background: rgba(139,143,163,0.06); color: #6b6f85; border-color: rgba(139,143,163,0.18); }
 
 /* Quick actions */
 .hero-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }

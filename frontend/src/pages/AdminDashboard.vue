@@ -7,12 +7,12 @@
 
     <!-- Overview cards -->
     <section class="stat-grid section-block">
-      <ScoreCard label="学生总数" :value="overview.totalUsers" hint="含管理员" />
-      <ScoreCard label="竞赛项目" :value="overview.totalProjects" accent="#0f766e" />
-      <ScoreCard label="有效评价" :value="overview.totalReviews" accent="#7c3aed" />
-      <ScoreCard label="隐藏评价" :value="overview.hiddenReviews" hint="已隐藏的评价数" accent="#ea580c" />
-      <ScoreCard label="平台平均分" :value="overview.averageScore || 0" accent="#2563eb" />
-      <ScoreCard label="无评价用户" :value="overview.usersWithoutReviews" hint="尚未收到任何评价的学生" accent="#d97706" />
+      <ScoreCard label="学生总数" :value="overview.totalUsers" hint="含管理员" accent="var(--primary)" />
+      <ScoreCard label="竞赛项目" :value="overview.totalProjects" hint="已创建的项目" accent="var(--teal)" />
+      <ScoreCard label="有效评价" :value="overview.totalReviews" hint="正常状态的评价" accent="#7c3aed" />
+      <ScoreCard label="隐藏评价" :value="overview.hiddenReviews" hint="已隐藏的评价数" accent="var(--danger)" />
+      <ScoreCard label="平台平均分" :value="overview.averageScore || 0" hint="正常评价综合均分" accent="var(--primary)" />
+      <ScoreCard label="无评价用户" :value="overview.usersWithoutReviews" hint="尚未收到评价的学生" accent="var(--amber)" />
     </section>
 
     <!-- Charts -->

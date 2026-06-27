@@ -68,9 +68,19 @@
             <div v-else class="tag-groups">
               <div v-for="(group, label) in groupedTags" :key="label" class="tag-group">
                 <span class="tag-group-label">{{ label }}</span>
-                <el-checkbox-group v-model="form.tagIds">
-                  <el-checkbox v-for="tag in group" :key="tag.id" :label="tag.id">{{ tag.displayName }}</el-checkbox>
-                </el-checkbox-group>
+                <div class="tag-chip-row">
+                  <button
+                    v-for="tag in group"
+                    :key="tag.id"
+                    type="button"
+                    class="tag-select-chip"
+                    :class="{ active: form.tagIds.includes(tag.id), [`chip-${tag.type}`]: true }"
+                    @click="toggleTag(tag.id)"
+                  >
+                    {{ tag.displayName }}
+                    <el-icon v-if="form.tagIds.includes(tag.id)" :size="14" style="margin-left:3px"><Check /></el-icon>
+                  </button>
+                </div>
               </div>
             </div>
           </el-form-item>
@@ -114,7 +124,7 @@ import { getMyProjects, getProjectDetail } from "@/api/projectApi";
 import { createReview } from "@/api/reviewApi";
 import { getTags } from "@/api/tagApi";
 import { useUserStore } from "@/store/user";
-import { User } from "@element-plus/icons-vue";
+import { User, Check } from "@element-plus/icons-vue";
 
 const DRAFT_KEY = "competition_review_draft";
 const route = useRoute();
@@ -137,6 +147,15 @@ const groupedTags = computed(() => ({
   "中性标签": tags.value.filter(t => t.type === "neutral"),
   "风险标签": tags.value.filter(t => t.type === "risk"),
 }));
+
+function toggleTag(tagId) {
+  const idx = form.tagIds.indexOf(tagId);
+  if (idx === -1) {
+    form.tagIds.push(tagId);
+  } else {
+    form.tagIds.splice(idx, 1);
+  }
+}
 
 function loadDraft() { try { const s = localStorage.getItem(DRAFT_KEY); if (s) { const d = JSON.parse(s); Object.keys(defaultForm).forEach(k => { if (d[k] !== undefined) form[k] = d[k]; }); return true; } } catch {} return false; }
 function saveDraft() { try { localStorage.setItem(DRAFT_KEY, JSON.stringify({...form})); } catch {} }
@@ -200,8 +219,19 @@ onMounted(async () => {
 .score-hint { font-size:12px; color:var(--text-faint); }
 
 .tag-groups { display:grid; gap:14px; width:100%; }
-.tag-group { padding:12px 14px; border:1px solid var(--border-soft); border-radius:var(--radius-sm); background:var(--surface-soft); display:grid; gap:8px; }
+.tag-group { padding:12px 14px; border:1px solid var(--border-soft); border-radius:var(--radius-sm); background:var(--surface-soft); display:grid; gap:10px; }
 .tag-group-label { font-size:13px; font-weight:600; color:var(--text-muted); }
+.tag-chip-row { display:flex; flex-wrap:wrap; gap:8px; }
+.tag-select-chip {
+  padding:5px 14px; border-radius:20px; border:1.2px solid var(--border-medium);
+  background:var(--surface-solid); font-size:13px; color:var(--text-muted);
+  cursor:pointer; transition:all 0.15s ease; display:inline-flex; align-items:center;
+  font-family:inherit; line-height:1.5;
+}
+.tag-select-chip:hover { border-color:var(--primary); color:var(--text-main); }
+.tag-select-chip.active { border-color:var(--primary); background:var(--primary-soft); color:var(--primary); font-weight:500; }
+.tag-select-chip.active.chip-neutral { border-color:#8b8fa3; background:rgba(139,143,163,0.08); color:#6b6f85; }
+.tag-select-chip.active.chip-risk { border-color:#d48b4a; background:rgba(212,139,74,0.08); color:#b8702d; }
 
 .member-chip { display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border:1px solid var(--border-soft); border-radius:var(--radius-sm); background:var(--surface-solid); gap:10px; transition:all var(--transition-base); }
 .member-chip.selectable { cursor:pointer; }

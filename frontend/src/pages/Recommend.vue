@@ -167,7 +167,7 @@ onMounted(async () => { if (!userStore.currentUser) { try { await userStore.fetc
 .recommend-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; }
 .rec-card {
   background:var(--surface-solid); border:1px solid var(--border-soft); border-radius:var(--radius-lg);
-  padding:22px; display:flex; flex-direction:column; gap:14px;
+  padding:22px; display:flex; flex-direction:column; gap:14px; min-height:260px;
   transition: all var(--transition-base);
 }
 .rec-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-hover); border-color:var(--primary); }
@@ -182,8 +182,8 @@ onMounted(async () => { if (!userStore.currentUser) { try { await userStore.fetc
 .rec-field { display:flex; justify-content:space-between; font-size:14px; color:var(--text-muted); }
 .rec-f-label { color:var(--text-faint); }
 .rec-f-hi { font-weight:600; color:var(--teal); }
-.rec-tags { min-height:24px; }
-.rec-actions { display:flex; justify-content:flex-end; }
+.rec-tags { min-height:28px; max-height:84px; overflow:hidden; }
+.rec-actions { margin-top:auto; display:flex; justify-content:flex-end; padding-top:4px; }
 .empty-placeholder { padding:52px; text-align:center; color:var(--text-faint); }
 .empty-icon-box {
   width: 56px; height: 56px; border-radius: 14px;
