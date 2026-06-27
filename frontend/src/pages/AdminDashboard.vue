@@ -20,7 +20,14 @@
       <div class="section-surface">
         <div class="panel-title">热门标签 TOP 8</div>
         <div ref="tagChartRef" class="chart-box"></div>
-        <div v-if="!dashboard.hotTags.length" class="empty-chart">
+        <div v-if="chartsLoading" class="empty-chart">
+          <span>正在加载图表数据...</span>
+        </div>
+        <div v-else-if="chartsError" class="empty-chart">
+          <span>图表数据加载失败</span>
+          <small>请刷新页面后重试</small>
+        </div>
+        <div v-else-if="!dashboard.hotTags.length" class="empty-chart">
           <el-icon :size="36"><DataAnalysis /></el-icon>
           <span>暂无标签数据</span>
           <small>产生评价并打标签后这里会显示排名</small>
@@ -29,7 +36,13 @@
       <div class="section-surface">
         <div class="panel-title">各专业平均评分</div>
         <div ref="majorChartRef" class="chart-box"></div>
-        <div v-if="!adminStats.byMajor.length" class="empty-chart">
+        <div v-if="chartsLoading" class="empty-chart">
+          <span>正在加载图表数据...</span>
+        </div>
+        <div v-else-if="chartsError" class="empty-chart">
+          <span>图表数据加载失败</span>
+        </div>
+        <div v-else-if="!adminStats.byMajor.length" class="empty-chart">
           <el-icon :size="36"><Histogram /></el-icon>
           <span>暂无各专业数据</span>
           <small>当产生更多评价后，这里会自动生成各专业均分对比</small>
@@ -38,7 +51,13 @@
       <div class="section-surface">
         <div class="panel-title">近 7 天评价趋势</div>
         <div ref="trendChartRef" class="chart-box"></div>
-        <div v-if="!adminStats.reviewTrend.length" class="empty-chart">
+        <div v-if="chartsLoading" class="empty-chart">
+          <span>正在加载图表数据...</span>
+        </div>
+        <div v-else-if="chartsError" class="empty-chart">
+          <span>图表数据加载失败</span>
+        </div>
+        <div v-else-if="!adminStats.reviewTrend.length" class="empty-chart">
           <el-icon :size="36"><DataLine /></el-icon>
           <span>暂无近期评价</span>
           <small>近 7 天产生新评价后，这里会显示趋势折线图</small>
@@ -331,7 +350,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onMounted, reactive, ref, watch } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref } from "vue";
 import { ElMessage } from "element-plus";
 import * as echarts from "echarts";
 import { DataAnalysis, Histogram, DataLine } from "@element-plus/icons-vue";
@@ -355,6 +374,15 @@ const processingAppeal = ref(false);
 const tagChartRef = ref(null);
 const majorChartRef = ref(null);
 const trendChartRef = ref(null);
+
+// ECharts instances for proper dispose
+let tagChartInst = null;
+let majorChartInst = null;
+let trendChartInst = null;
+
+// Chart loading states
+const chartsLoading = ref(true);
+const chartsError = ref(false);
 
 const adminStats = reactive({
   byMajor: [],
@@ -435,11 +463,20 @@ function resetReviewFilters() {
   fetchReviews();
 }
 
+function disposeChart(inst) { try { inst?.dispose(); } catch {} }
+
+function initChart(domRef, existingInst) {
+  if (!domRef.value) return existingInst;
+  // Dispose existing instance before creating new one
+  disposeChart(existingInst);
+  return echarts.init(domRef.value);
+}
+
 /* ---- Charts ---- */
 function renderTagChart() {
   if (!tagChartRef.value || !dashboard.hotTags.length) return;
-  const chart = echarts.init(tagChartRef.value);
-  chart.setOption({
+  tagChartInst = initChart(tagChartRef, tagChartInst);
+  tagChartInst.setOption({
     tooltip: {
       trigger: "axis",
       backgroundColor: "#fff",
@@ -471,8 +508,8 @@ function renderTagChart() {
 
 function renderMajorChart() {
   if (!majorChartRef.value || !adminStats.byMajor.length) return;
-  const chart = echarts.init(majorChartRef.value);
-  chart.setOption({
+  majorChartInst = initChart(majorChartRef, majorChartInst);
+  majorChartInst.setOption({
     tooltip: {
       trigger: "axis",
       backgroundColor: "#fff",
@@ -518,8 +555,8 @@ function formatDateFull(dateStr) {
 
 function renderTrendChart() {
   if (!trendChartRef.value || !adminStats.reviewTrend.length) return;
-  const chart = echarts.init(trendChartRef.value);
-  chart.setOption({
+  trendChartInst = initChart(trendChartRef, trendChartInst);
+  trendChartInst.setOption({
     tooltip: {
       trigger: "axis",
       backgroundColor: "#fff",
@@ -558,15 +595,27 @@ function renderAllCharts() {
     renderTagChart();
     renderMajorChart();
     renderTrendChart();
+    // Delayed resize to ensure containers are sized
+    requestAnimationFrame(() => {
+      [tagChartInst, majorChartInst, trendChartInst].forEach(c => {
+        try { c?.resize(); } catch {}
+      });
+    });
   });
 }
 
 async function fetchAdminStats() {
+  chartsLoading.value = true;
+  chartsError.value = false;
   try {
     const res = await getAdminStats();
     Object.assign(adminStats, res.data);
+    chartsLoading.value = false;
+    // CRITICAL: render charts AFTER admin stats data is loaded
+    renderAllCharts();
   } catch (error) {
-    // non-critical
+    chartsLoading.value = false;
+    chartsError.value = true;
   }
 }
 
@@ -736,6 +785,13 @@ function handleTabChange(tab) {
 
 onMounted(async () => {
   await Promise.all([fetchOverview(), fetchUsers(), fetchAdminStats()]);
+});
+
+onBeforeUnmount(() => {
+  disposeChart(tagChartInst);
+  disposeChart(majorChartInst);
+  disposeChart(trendChartInst);
+  tagChartInst = majorChartInst = trendChartInst = null;
 });
 </script>
 
