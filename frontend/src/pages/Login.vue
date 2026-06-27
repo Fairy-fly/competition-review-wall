@@ -15,7 +15,7 @@
       <div class="hero-inner">
         <!-- Brand -->
         <div class="hero-brand">
-          <img src="/brand-logo.png" alt="竞赛队友测评墙" class="hero-logo" />
+          <BrandLogo :size="60" />
           <div class="hero-brand-text">
             <strong>竞赛队友测评墙</strong>
             <span>课程设计 Demo</span>
@@ -122,6 +122,7 @@ import { reactive, ref } from "vue";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 import { Hide, DataAnalysis, Connection, UserFilled, Lock, InfoFilled } from "@element-plus/icons-vue";
+import BrandLogo from "@/components/BrandLogo.vue";
 import { useUserStore } from "@/store/user";
 
 const router = useRouter();
@@ -182,11 +183,11 @@ async function handleLogin() {
   100% { transform: translateX(40px); opacity: 0.08; }
 }
 
-/* ===== Left Hero (60%) ===== */
+/* ===== Left Hero (62%) ===== */
 .login-hero {
-  flex: 6;
+  flex: 62;
   display: flex; align-items: center;
-  padding: 60px 64px 60px 72px;
+  padding: 64px 72px 64px 80px;
   position: relative; z-index: 1;
 }
 .login-hero::after {
@@ -197,7 +198,7 @@ async function handleLogin() {
 }
 
 .hero-inner {
-  max-width: 620px;
+  max-width: 660px;
   display: flex; flex-direction: column;
   animation: fadeSlideUp 600ms ease both;
 }
@@ -207,19 +208,18 @@ async function handleLogin() {
 }
 
 /* Brand */
-.hero-brand { display: flex; align-items: center; gap: 16px; margin-bottom: 40px; }
-.hero-logo { width: 52px; height: 52px; border-radius: 12px; flex-shrink: 0; }
+.hero-brand { display: flex; align-items: center; gap: 18px; margin-bottom: 44px; }
 .hero-brand-text { display: flex; flex-direction: column; gap: 2px; }
 .hero-brand-text strong { font-size: 18px; color: var(--brand-ink); font-weight: 650; }
 .hero-brand-text span { font-size: 12px; color: var(--brand-faint); letter-spacing: 0.5px; }
 
 /* Headline */
 .hero-headline { margin: 0; }
-.hl-line { display: block; font-size: 64px; font-weight: 700; color: var(--brand-ink); letter-spacing: -2px; line-height: 1.12; }
+.hl-line { display: block; font-size: 72px; font-weight: 700; color: var(--brand-ink); letter-spacing: -2.5px; line-height: 1.08; }
 .hl-accent { color: var(--brand-primary); position: relative; }
 .hl-accent::after {
-  content: ""; position: absolute; bottom: 4px; left: 0; right: 0; height: 8px;
-  background: rgba(91,108,255,0.12); border-radius: 4px; z-index: -1;
+  content: ""; position: absolute; bottom: 6px; left: 0; right: 0; height: 10px;
+  background: rgba(91,108,255,0.14); border-radius: 5px; z-index: -1;
 }
 
 .hero-desc { margin: 28px 0 0; color: var(--brand-muted); font-size: 17px; line-height: 1.8; max-width: 480px; }
@@ -254,11 +254,11 @@ async function handleLogin() {
 .hm-num { font-size: 34px; font-weight: 700; color: var(--brand-ink); letter-spacing: -0.5px; }
 .hm-label { font-size: 13px; color: var(--brand-faint); }
 
-/* ===== Right Login Panel (40%) ===== */
+/* ===== Right Login Panel (38%) ===== */
 .login-panel {
-  flex: 4;
+  flex: 38;
   display: flex; align-items: center; justify-content: center;
-  padding: 60px 56px;
+  padding: 64px 56px;
   position: relative; z-index: 1;
 }
 
