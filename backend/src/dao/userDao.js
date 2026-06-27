@@ -136,7 +136,8 @@ async function getWallSummary() {
 async function listAdminUsers() {
   return query(
     `SELECT
-       u.*,
+       u.id, u.student_no, u.real_name, u.college, u.major,
+       u.grade, u.skill_direction, u.role, u.created_at, u.updated_at,
        COUNT(DISTINCT tm.project_id) AS project_count,
        COUNT(DISTINCT r.id) AS review_count
      FROM users u
