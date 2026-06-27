@@ -135,14 +135,14 @@ body {
   --el-button-border-color: var(--brand-primary);
   --el-button-hover-bg-color: var(--brand-primary-deep);
   --el-button-hover-border-color: var(--brand-primary-deep);
-  background: linear-gradient(135deg, #6470F7 0%, #4F5FEA 100%) !important;
+  background: linear-gradient(135deg, #6672F6 0%, #4D5BE8 100%) !important;
   border: none !important;
-  box-shadow: 0 10px 24px rgba(79,95,234,0.22);
+  box-shadow: 0 12px 28px rgba(79,91,232,0.20);
   border-radius: 14px !important;
 }
 .el-button--primary:hover {
-  background: linear-gradient(135deg, #5D68F0 0%, #4656DD 100%) !important;
-  box-shadow: 0 14px 30px rgba(79,95,234,0.26);
+  filter: brightness(1.03);
+  box-shadow: 0 16px 34px rgba(79,91,232,0.26);
   transform: translateY(-1px);
 }
 
@@ -230,4 +230,14 @@ img[src*="pet"], img[src*="hatch"] { display: none !important; opacity: 0 !impor
   .motion-page, .motion-hero, .motion-card,
   .motion-stagger > * { animation: none !important; }
   .el-button:hover { transform: none; }
+}
+
+/* ---- Autofill fix ---- */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #0f172a !important;
+  box-shadow: 0 0 0px 1000px rgba(248,251,255,0.78) inset !important;
+  -webkit-box-shadow: 0 0 0px 1000px rgba(248,251,255,0.78) inset !important;
+  transition: background-color 9999s ease-in-out 0s;
 }

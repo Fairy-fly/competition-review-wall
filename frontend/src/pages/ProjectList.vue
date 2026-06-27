@@ -40,7 +40,7 @@
         </el-table-column>
         <el-table-column prop="memberCount" label="成员数" width="100" />
         <el-table-column label="时间" min-width="180">
-          <template #default="{ row }">{{ row.startDate || "-" }} 至 {{ row.endDate || "-" }}</template>
+          <template #default="{ row }">{{ fmtDate(row.startDate) }} - {{ fmtDate(row.endDate) }}</template>
         </el-table-column>
         <el-table-column label="操作" width="140" fixed="right">
           <template #default="{ row }">
@@ -71,6 +71,13 @@ const projects = ref([]);
 
 const statusLabel = (s) => ({ ongoing:"进行中", reviewable:"可评价", archived:"已归档" }[s] || s);
 const statusTag = (s) => ({ ongoing:"info", reviewable:"success", archived:"" }[s] || "info");
+
+function fmtDate(v) {
+  if (!v) return "-";
+  const d = new Date(v);
+  if (Number.isNaN(d.getTime())) return v;
+  return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,"0")}.${String(d.getDate()).padStart(2,"0")}`;
+}
 
 const statusCounts = computed(() => ({
   ongoing: projects.value.filter(p => p.status === "ongoing").length,

@@ -27,7 +27,7 @@
           <el-descriptions-item label="创建者">{{ project.creatorName || "-" }}</el-descriptions-item>
           <el-descriptions-item label="竞赛类型">{{ project.type || "-" }}</el-descriptions-item>
           <el-descriptions-item label="队伍名称">{{ project.teamName || "-" }}</el-descriptions-item>
-          <el-descriptions-item label="项目时间">{{ project.startDate || "-" }} 至 {{ project.endDate || "-" }}</el-descriptions-item>
+          <el-descriptions-item label="项目时间">{{ fmtDate(project.startDate) }} - {{ fmtDate(project.endDate) }}</el-descriptions-item>
           <el-descriptions-item label="项目说明">{{ project.description || "暂无说明" }}</el-descriptions-item>
         </el-descriptions>
 
@@ -208,6 +208,13 @@ const stageMap = {
 };
 
 const stageInfo = computed(() => stageMap[project.value.status] || stageMap.ongoing);
+
+function fmtDate(v) {
+  if (!v) return "-";
+  const d = new Date(v);
+  if (Number.isNaN(d.getTime())) return v;
+  return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,"0")}.${String(d.getDate()).padStart(2,"0")}`;
+}
 const nextAction = computed(() => {
   if (project.value.status === "ongoing") {
     return { label: "去添加队友", action: "member" };
