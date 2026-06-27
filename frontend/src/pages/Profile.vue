@@ -24,82 +24,85 @@
       </div>
     </section>
 
-    <!-- Two columns: edit form + overview -->
-    <div class="two-col-grid section-block motion-stagger">
-      <section class="section-surface">
-        <div class="surface-actions"><div><strong>资料维护</strong><div class="muted-text">这些信息会同步到测评墙公开画像。</div></div></div>
-        <el-form :model="form" label-width="88px">
-          <el-form-item label="学号"><el-input :model-value="userStore.currentUser?.studentNo" disabled /></el-form-item>
-          <el-form-item label="姓名"><el-input v-model="form.realName" /></el-form-item>
-          <el-form-item label="学院"><el-input v-model="form.college" /></el-form-item>
-          <el-form-item label="专业"><el-input v-model="form.major" /></el-form-item>
-          <el-form-item label="年级"><el-input v-model="form.grade" /></el-form-item>
-          <el-form-item label="技能方向"><el-input v-model="form.skillDirection" placeholder="例如：前端开发 / 算法建模" /></el-form-item>
-          <el-form-item>
-            <el-button type="primary" :loading="saving" @click="saveProfile" class="btn-lift">保存资料</el-button>
-            <el-button @click="router.push(`/users/${userStore.currentUser?.id}`)" class="btn-lift">查看公开画像</el-button>
-          </el-form-item>
-        </el-form>
-      </section>
+    <!-- Left stack + Right stack -->
+    <div class="profile-stack section-block motion-stagger">
+      <!-- Left -->
+      <div class="stack-col stack-left">
+        <section class="section-surface">
+          <div class="surface-actions"><div><strong>资料维护</strong><div class="muted-text">这些信息会同步到测评墙公开画像。</div></div></div>
+          <el-form :model="form" label-width="88px">
+            <el-form-item label="学号"><el-input :model-value="userStore.currentUser?.studentNo" disabled /></el-form-item>
+            <el-form-item label="姓名"><el-input v-model="form.realName" /></el-form-item>
+            <el-form-item label="学院"><el-input v-model="form.college" /></el-form-item>
+            <el-form-item label="专业"><el-input v-model="form.major" /></el-form-item>
+            <el-form-item label="年级"><el-input v-model="form.grade" /></el-form-item>
+            <el-form-item label="技能方向"><el-input v-model="form.skillDirection" placeholder="例如：前端开发 / 算法建模" /></el-form-item>
+            <el-form-item>
+              <el-button type="primary" :loading="saving" @click="saveProfile" class="btn-lift">保存资料</el-button>
+              <el-button @click="router.push(`/users/${userStore.currentUser?.id}`)" class="btn-lift">查看公开画像</el-button>
+            </el-form-item>
+          </el-form>
+        </section>
 
-      <section class="section-surface">
-        <div class="surface-actions"><div><strong>协作画像</strong><div class="muted-text">基于正常状态匿名评价的聚合数据。</div></div></div>
-        <div class="stat-grid">
-          <div class="mini-stat-card"><div class="ms-num">{{ profile.summary.overallScore || 0 }}</div><div class="ms-label">综合分</div></div>
-          <div class="mini-stat-card"><div class="ms-num" style="color:var(--teal)">{{ profile.summary.reviewCount || 0 }}</div><div class="ms-label">评价次数</div></div>
-          <div class="mini-stat-card"><div class="ms-num" style="color:var(--primary)">{{ profile.summary.projectCount || 0 }}</div><div class="ms-label">参与项目</div></div>
-          <div class="mini-stat-card"><div class="ms-num" style="color:var(--amber)">{{ profile.summary.willingAgainRate || 0 }}%</div><div class="ms-label">再次组队率</div></div>
-        </div>
-        <div class="section-block">
-          <RadarChart :scores="profile.summary" />
-        </div>
-        <div class="section-block">
-          <strong>我的标签</strong>
-          <div class="muted-text" style="margin:6px 0 10px">{{ profile.topTags && profile.topTags.length ? '队友最常留下的协作印象。' : '收到评价后会生成标签。' }}</div>
+        <section class="section-surface">
+          <div class="panel-title">近 3 个参与项目</div>
+          <div v-if="profile.recentProjects && profile.recentProjects.length" class="mini-list">
+            <button v-for="p in profile.recentProjects" :key="p.id" class="mini-row" @click="router.push(`/projects/${p.id}`)">
+              <span><strong>{{ p.name }}</strong><small>{{ p.type || "" }} · {{ p.roleInTeam || "队员" }}</small></span>
+              <el-tag size="small" effect="light">{{ statusText(p.status) }}</el-tag>
+            </button>
+          </div>
+          <div v-else class="profile-empty">暂无参与项目</div>
+        </section>
+
+        <section class="section-surface">
+          <div class="panel-title">我收藏的队友</div>
+          <div v-if="favorites.length" class="mini-list">
+            <button v-for="u in favorites" :key="u.id" class="mini-row" @click="router.push(`/users/${u.id}`)">
+              <span><strong>{{ u.realName }}</strong><small>{{ u.major || "" }} · {{ u.skillDirection || "" }}</small></span>
+              <el-tag size="small" effect="light" type="success">{{ u.averageScore || 0 }} 分</el-tag>
+            </button>
+          </div>
+          <div v-else class="profile-empty">暂未收藏队友<el-button link type="primary" style="margin-left:6px" @click="router.push('/')">去测评墙找人</el-button></div>
+        </section>
+
+        <section class="section-surface">
+          <div class="surface-actions"><div><strong>最近收到的匿名评价</strong><div class="muted-text">前台始终只展示匿名队友。</div></div></div>
+          <ReviewList :reviews="profile.recentReviews" show-appeal @appeal="showAppealDialog" />
+        </section>
+      </div>
+
+      <!-- Right -->
+      <div class="stack-col stack-right">
+        <section class="section-surface">
+          <div class="surface-actions"><div><strong>协作画像</strong><div class="muted-text">基于正常状态匿名评价的聚合数据。</div></div></div>
+          <div class="stat-grid">
+            <div class="mini-stat-card"><div class="ms-num">{{ profile.summary.overallScore || 0 }}</div><div class="ms-label">综合分</div></div>
+            <div class="mini-stat-card"><div class="ms-num" style="color:var(--teal)">{{ profile.summary.reviewCount || 0 }}</div><div class="ms-label">评价次数</div></div>
+            <div class="mini-stat-card"><div class="ms-num" style="color:var(--primary)">{{ profile.summary.projectCount || 0 }}</div><div class="ms-label">参与项目</div></div>
+            <div class="mini-stat-card"><div class="ms-num" style="color:var(--amber)">{{ profile.summary.willingAgainRate || 0 }}%</div><div class="ms-label">再次组队率</div></div>
+          </div>
+          <div class="section-block">
+            <RadarChart :scores="profile.summary" />
+          </div>
+        </section>
+
+        <section class="section-surface">
+          <div class="panel-title">我的标签</div>
+          <div class="muted-text" style="margin:0 0 10px">{{ profile.topTags && profile.topTags.length ? '队友最常留下的协作印象。' : '收到评价后会生成标签。' }}</div>
           <TagList v-if="profile.topTags && profile.topTags.length" :tags="profile.topTags" show-count />
-          <div v-else class="empty-placeholder" style="padding:24px">收到评价后会生成标签</div>
-        </div>
-      </section>
+          <div v-else class="profile-empty">收到评价后会生成标签</div>
+        </section>
+
+        <section class="section-surface">
+          <div class="panel-title">适合角色</div>
+          <div v-if="suitableRoles.length" class="role-list">
+            <div v-for="r in suitableRoles" :key="r.role" class="role-chip"><span class="role-name">{{ r.role }}</span><span class="role-reason">{{ r.reason }}</span></div>
+          </div>
+          <div v-else class="profile-empty">暂未积累足够数据</div>
+        </section>
+      </div>
     </div>
-
-    <!-- Three columns -->
-    <section class="three-col-grid section-block motion-stagger">
-      <div class="section-surface">
-        <div class="panel-title">近 3 个参与项目</div>
-        <div v-if="profile.recentProjects && profile.recentProjects.length" class="mini-list">
-          <button v-for="p in profile.recentProjects" :key="p.id" class="mini-row" @click="router.push(`/projects/${p.id}`)">
-            <span><strong>{{ p.name }}</strong><small>{{ p.type || "" }} · {{ p.roleInTeam || "队员" }}</small></span>
-            <el-tag size="small" effect="light">{{ statusText(p.status) }}</el-tag>
-          </button>
-        </div>
-        <div v-else class="empty-placeholder">暂无参与项目</div>
-      </div>
-
-      <div class="section-surface">
-        <div class="panel-title">我收藏的队友</div>
-        <div v-if="favorites.length" class="mini-list">
-          <button v-for="u in favorites" :key="u.id" class="mini-row" @click="router.push(`/users/${u.id}`)">
-            <span><strong>{{ u.realName }}</strong><small>{{ u.major || "" }} · {{ u.skillDirection || "" }}</small></span>
-            <el-tag size="small" effect="light" type="success">{{ u.averageScore || 0 }} 分</el-tag>
-          </button>
-        </div>
-        <div v-else class="empty-placeholder">暂未收藏队友<el-button link type="primary" style="margin-left:6px" @click="router.push('/')">去测评墙找人</el-button></div>
-      </div>
-
-      <div class="section-surface">
-        <div class="panel-title">适合角色</div>
-        <div v-if="suitableRoles.length" class="role-list">
-          <div v-for="r in suitableRoles" :key="r.role" class="role-chip"><span class="role-name">{{ r.role }}</span><span class="role-reason">{{ r.reason }}</span></div>
-        </div>
-        <div v-else class="empty-placeholder">暂未积累足够数据</div>
-      </div>
-    </section>
-
-    <!-- Received Reviews -->
-    <section class="section-block section-surface motion-card">
-      <div class="surface-actions"><div><strong>最近收到的匿名评价</strong><div class="muted-text">前台始终只展示匿名队友，不暴露评价人身份。</div></div></div>
-      <ReviewList :reviews="profile.recentReviews" show-appeal @appeal="showAppealDialog" />
-    </section>
 
     <el-dialog v-model="appealDialogVisible" title="申请申诉" width="440px" :close-on-click-modal="false">
       <el-form label-width="80px">
@@ -195,8 +198,13 @@ onMounted(async () => { syncForm(); await Promise.all([fetchProfile(), fetchFavo
 </script>
 
 <style scoped>
-/* Override grid stretch to prevent forced equal-height columns */
-.two-col-grid { align-items: start; }
+.profile-stack {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 24px;
+  align-items: start;
+}
+.stack-col { display: flex; flex-direction: column; gap: 20px; }
 .hero-banner { display:flex; gap:36px; align-items:center; padding:32px 40px; margin-bottom:24px; background:var(--surface-solid); border:1px solid var(--border-soft); border-radius:var(--radius-xl); box-shadow:var(--shadow-card); }
 .hero-left { flex:1; }
 .hero-right { min-width:300px; }
@@ -217,5 +225,10 @@ onMounted(async () => { syncForm(); await Promise.all([fetchProfile(), fetchFavo
 .role-chip { border:1px solid var(--primary-soft); border-radius:var(--radius-sm); background:var(--primary-soft); padding:10px 14px; display:flex; flex-direction:column; gap:2px; }
 .role-name { font-weight:600; color:var(--primary-dark); font-size:14px; }
 .role-reason { color:var(--text-faint); font-size:12px; }
-.empty-placeholder { padding:20px; text-align:center; color:var(--text-faint); font-size:14px; }
+.profile-empty { padding:20px; text-align:center; color:var(--text-faint); font-size:14px; }
+
+@media (max-width: 900px) {
+  .profile-stack { grid-template-columns: 1fr; }
+  .stack-right { order: -1; }
+}
 </style>
