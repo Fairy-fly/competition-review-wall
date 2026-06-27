@@ -33,9 +33,14 @@
             <span class="preview-badge">协作画像预览</span>
           </div>
           <div class="preview-core">
-            <div class="preview-ring-wrap">
-              <div class="preview-ring"></div>
-              <span class="preview-ring-score">4.1</span>
+            <div class="radar-mini">
+              <svg viewBox="0 0 80 80" class="radar-mini-svg">
+                <polygon points="40,8 70,30 60,62 20,62 10,30" fill="rgba(79,99,246,0.05)" stroke="rgba(79,99,246,0.15)" stroke-width="1"/>
+                <polygon points="40,18 62,36 54,56 26,56 18,36" fill="rgba(79,99,246,0.08)" stroke="rgba(79,99,246,0.22)" stroke-width="1"/>
+                <polygon points="40,28 54,40 48,50 32,50 26,40" fill="rgba(79,99,246,0.12)" stroke="rgba(79,99,246,0.35)" stroke-width="1.2"/>
+                <circle cx="40" cy="40" r="2.5" fill="#4f63f6"/>
+              </svg>
+              <div class="radar-mini-scan"></div>
             </div>
             <div class="preview-key">
               <span class="preview-key-label">再次组队率</span>
@@ -377,28 +382,23 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-/* ---- Hero ---- */
+/* Hero with subtle grid pattern */
 .hero-banner {
-  display: flex;
-  gap: 36px;
-  align-items: stretch;
-  padding: 40px 44px;
-  margin-bottom: 28px;
-  background: var(--surface-solid);
+  display: flex; gap: 36px; align-items: stretch;
+  padding: 40px 44px; margin-bottom: 28px;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(79,99,246,0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(15,118,110,0.03) 0%, transparent 50%),
+    var(--surface-solid);
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-card);
-  overflow: hidden;
-  position: relative;
+  position: relative; overflow: hidden;
 }
 .hero-banner::before {
   content: "";
-  position: absolute;
-  top: -40%;
-  left: -10%;
-  width: 60%;
-  height: 180%;
-  background: radial-gradient(ellipse, rgba(79,99,246,0.06) 0%, transparent 70%);
+  position: absolute; top: -30%; left: -5%; width: 55%; height: 160%;
+  background: radial-gradient(ellipse, rgba(79,99,246,0.05) 0%, transparent 70%);
   pointer-events: none;
 }
 .hero-left { flex: 1; min-width: 0; position: relative; z-index: 1; }
@@ -411,37 +411,39 @@ onMounted(async () => {
 .metric-num { font-size: 34px; font-weight: 700; color: var(--primary); letter-spacing: -0.5px; }
 .metric-label { font-size: 13px; color: var(--text-faint); }
 
-/* Preview card */
+/* Radar brand preview */
 .hero-preview {
-  background: linear-gradient(145deg, #fafbff 0%, #f5f7ff 100%);
-  border: 1px solid rgba(79, 99, 246, 0.14);
+  background: linear-gradient(160deg, #f8faff 0%, #f0f5ff 50%, #f5f9ff 100%);
+  border: 1px solid rgba(79, 99, 246, 0.16);
   border-radius: var(--radius-lg);
-  padding: 20px 22px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  min-width: 200px;
+  padding: 22px 24px;
+  display: flex; flex-direction: column; gap: 16px;
+  min-width: 200px; position: relative; overflow: hidden;
+}
+.hero-preview::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(circle at 30% 40%, rgba(79,99,246,0.03) 0%, transparent 50%),
+    radial-gradient(circle at 70% 80%, rgba(15,118,110,0.02) 0%, transparent 40%);
 }
 .preview-head { display: flex; align-items: center; }
 .preview-badge {
   font-size: 12px; font-weight: 600; color: var(--primary);
   background: rgba(79,99,246,0.08); padding: 3px 12px; border-radius: 20px;
 }
-.preview-core { display: flex; align-items: center; gap: 18px; }
-.preview-ring-wrap {
-  width: 58px; height: 58px; border-radius: 50%;
-  background: rgba(79,99,246,0.06); border: 2px solid rgba(79,99,246,0.15);
-  display: grid; place-items: center; position: relative; flex-shrink: 0;
+.preview-core { display: flex; align-items: center; gap: 20px; }
+
+/* Mini pentagon radar */
+.radar-mini { width: 62px; height: 62px; position: relative; flex-shrink: 0; }
+.radar-mini-svg { width: 100%; height: 100%; }
+.radar-mini-scan {
+  position: absolute; top: 0; left: 50%; width: 50%; height: 100%;
+  background: conic-gradient(from 0deg, rgba(79,99,246,0.06) 0deg, transparent 30deg);
+  transform-origin: left center; animation: radarSweep 3s linear infinite;
+  pointer-events: none; border-radius: 0 999px 999px 0;
 }
-.preview-ring {
-  position: absolute; inset: -2px; border-radius: 50%;
-  border: 2px solid transparent;
-  border-top-color: var(--primary);
-  border-right-color: var(--primary);
-  opacity: 0.4; animation: spin 4s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.preview-ring-score { font-size: 18px; font-weight: 700; color: var(--primary); }
+@keyframes radarSweep { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
 .preview-key { display: flex; flex-direction: column; gap: 2px; }
 .preview-key-label { font-size: 11px; color: var(--text-faint); }
 .preview-key-value { font-size: 22px; font-weight: 700; color: var(--teal); }
@@ -449,6 +451,10 @@ onMounted(async () => {
 .preview-chip { display:inline-flex; align-items:center; height:26px; padding:0 10px; border-radius:999px; font-size:11px; font-weight:500; border:1.2px solid; line-height:1; box-sizing:border-box; white-space:nowrap; }
 .preview-chip.positive { background: rgba(59,130,176,0.10); color: #1e5a7a; border-color: rgba(59,130,176,0.35); }
 .preview-chip.neutral { background: rgba(100,116,139,0.08); color: #4a5568; border-color: rgba(100,116,139,0.30); }
+
+@media (prefers-reduced-motion: reduce) {
+  .radar-mini-scan { animation: none; }
+}
 
 /* Quick actions */
 .hero-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
