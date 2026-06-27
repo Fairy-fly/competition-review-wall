@@ -170,8 +170,9 @@ async function handleSubmit() {
   submitting.value = true;
   try {
     await createReview({ projectId:form.projectId, revieweeId:form.revieweeId, overallScore:form.overallScore, taskScore:form.taskScore, communicationScore:form.communicationScore, responsibilityScore:form.responsibilityScore, skillScore:form.skillScore, willingAgain:form.willingAgain, comment:form.comment.trim(), tagIds:form.tagIds });
+    const revieweeId = form.revieweeId;
     clearDraft();
-    router.push(`/users/${form.revieweeId}?reviewSubmitted=1`);
+    router.push(`/users/${revieweeId}?reviewSubmitted=1`);
   } catch(e) { ElMessage.error(e.message); }
   finally { submitting.value = false; }
 }
