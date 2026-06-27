@@ -449,8 +449,8 @@ onMounted(async () => {
 .preview-key-value { font-size: 22px; font-weight: 700; color: var(--teal); }
 .preview-tags { display: flex; gap: 6px; }
 .preview-chip { display:inline-flex; align-items:center; height:26px; padding:0 10px; border-radius:999px; font-size:11px; font-weight:500; border:1.2px solid; line-height:1; box-sizing:border-box; white-space:nowrap; }
-.preview-chip.positive { background: rgba(91,108,255,0.09); color: #3F51D1; border-color: rgba(91,108,255,0.24); }
-.preview-chip.neutral { background: rgba(148,163,184,0.09); color: #64748B; border-color: rgba(148,163,184,0.20); }
+.preview-chip.positive { background: rgba(91,108,255,0.08); color: #5360D8; border-color: rgba(91,108,255,0.22); }
+.preview-chip.neutral { background: rgba(100,116,139,0.08); color: #64748B; border-color: rgba(100,116,139,0.18); }
 
 @media (prefers-reduced-motion: reduce) {
   .radar-mini-scan { animation: none; }
