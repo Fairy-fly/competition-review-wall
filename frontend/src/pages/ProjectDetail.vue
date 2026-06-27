@@ -54,9 +54,9 @@
         </div>
         <el-progress :percentage="progress.summary.progressRate || 0" />
         <div class="progress-grid">
-          <ScoreCard label="可评价对象" :value="progress.summary.totalTargets || 0" hint="不包含自己" />
-          <ScoreCard label="已评价" :value="progress.summary.completedCount || 0" accent="#0f766e" />
-          <ScoreCard label="待评价" :value="progress.summary.pendingCount || 0" accent="#ea580c" />
+          <ScoreCard label="可评价对象" :value="progress.summary.totalTargets || 0" hint="不包含自己" accent="#5B6CFF" />
+          <ScoreCard label="已评价" :value="progress.summary.completedCount || 0" accent="#18A999" />
+          <ScoreCard label="待评价" :value="progress.summary.pendingCount || 0" accent="#D98922" />
         </div>
       </section>
     </div>
@@ -311,34 +311,64 @@ onMounted(fetchDetail);
 </script>
 
 <style scoped>
-.project-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
+.project-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.head-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
+.status-note { margin: 6px 0 12px; }
+.status-actions { margin-top: 14px; }
+
+/* ---- Status radio group: segmented pill ---- */
+:deep(.el-radio-group) {
+  background: rgba(248,250,252,0.85);
+  border: 1px solid rgba(148,163,184,0.18);
+  border-radius: 14px;
+  padding: 4px;
+  display: inline-flex;
+}
+:deep(.el-radio-button__inner) {
+  border-radius: 10px !important;
+  border: 1px solid transparent !important;
+  background: transparent !important;
+  color: #64748b !important;
+  font-weight: 500;
+  padding: 7px 18px;
+  transition: all 0.18s ease;
+  box-shadow: none !important;
+}
+:deep(.el-radio-button__original-radio:checked + .el-radio-button__inner) {
+  border: 1px solid transparent !important;
+  box-shadow: none !important;
+}
+/* ongoing checked */
+:deep(.el-radio-button__original-radio[value="ongoing"]:checked + .el-radio-button__inner) {
+  background: linear-gradient(135deg, rgba(217,137,34,.14), rgba(217,137,34,.07)) !important;
+  color: #B96D12 !important;
+  border-color: rgba(217,137,34,.22) !important;
+  font-weight: 600;
+}
+/* reviewable checked */
+:deep(.el-radio-button__original-radio[value="reviewable"]:checked + .el-radio-button__inner) {
+  background: linear-gradient(135deg, rgba(24,169,153,.16), rgba(24,169,153,.07)) !important;
+  color: #0C8A7A !important;
+  border-color: rgba(24,169,153,.24) !important;
+  font-weight: 600;
+}
+/* archived checked */
+:deep(.el-radio-button__original-radio[value="archived"]:checked + .el-radio-button__inner) {
+  background: linear-gradient(135deg, rgba(100,116,139,.12), rgba(100,116,139,.06)) !important;
+  color: #475569 !important;
+  border-color: rgba(100,116,139,.20) !important;
+  font-weight: 600;
 }
 
-.head-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: flex-end;
+/* Progress bar */
+:deep(.el-progress-bar__outer) { background: #e8ecf1; border-radius: 8px; }
+:deep(.el-progress-bar__inner) {
+  background: linear-gradient(90deg, #5B6CFF, #18A999) !important;
+  border-radius: 8px;
+  box-shadow: 0 4px 14px rgba(91,108,255,0.12);
 }
 
-.status-note {
-  margin: 6px 0 12px;
-}
-
-.status-actions {
-  margin-top: 12px;
-}
-
-.progress-grid {
-  margin-top: 16px;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-}
+.progress-grid { margin-top: 16px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
 
 .preview-card {
   margin-top: 12px;
