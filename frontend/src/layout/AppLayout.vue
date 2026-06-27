@@ -2,12 +2,7 @@
   <div class="app-layout">
     <aside class="app-sidebar desktop-only" :class="{ collapsed: appStore.collapsed }">
       <div class="brand-block">
-        <img
-          src="/brand-logo.png"
-          alt="竞赛队友测评墙"
-          class="brand-logo-img"
-          :style="{ width: appStore.collapsed ? '36px' : '44px', height: appStore.collapsed ? '36px' : '44px' }"
-        />
+        <BrandLogo :size="appStore.collapsed ? 36 : 44" />
         <div v-if="!appStore.collapsed" class="brand-copy">
           <strong>竞赛队友测评墙</strong>
           <span>课程设计 Demo</span>
@@ -126,6 +121,7 @@
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
+import BrandLogo from "@/components/BrandLogo.vue";
 import { useAppStore } from "@/store/app";
 import { useUserStore } from "@/store/user";
 

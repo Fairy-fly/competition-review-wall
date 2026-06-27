@@ -145,15 +145,27 @@ body {
   transform: translateY(-1px);
 }
 
-/* Small action buttons (view profile, etc.) */
-.el-button--primary.el-button--small,
+/* Link-style primary buttons: clean text, no gradient block */
 .el-button--primary.is-link {
-  background: linear-gradient(135deg, rgba(111,123,255,0.92), rgba(85,103,245,0.88)) !important;
-  box-shadow: 0 4px 12px rgba(85,103,245,0.12);
-  border-radius: 10px !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #4352d8 !important;
+  font-weight: 600;
+  padding: 4px 8px !important;
+  border-radius: 6px !important;
 }
 .el-button--primary.is-link:hover {
-  box-shadow: 0 6px 18px rgba(85,103,245,0.18);
+  background: rgba(91,108,255,0.09) !important;
+  color: #3442c4 !important;
+  box-shadow: none !important;
+}
+
+/* Small solid primary buttons */
+.el-button--primary.el-button--small:not(.is-link) {
+  background: linear-gradient(135deg, #6F7BFF 0%, #5567F5 55%, #4457E6 100%) !important;
+  box-shadow: 0 6px 16px rgba(85,103,245,0.14);
+  border-radius: 12px !important;
 }
 
 .el-input__wrapper,
@@ -188,6 +200,19 @@ body {
 .el-progress-bar__outer { background: #e2e8f0; border-radius: 8px; }
 .el-progress-bar__inner { border-radius: 8px; }
 .el-tag { border-radius: 20px; font-weight: 500; font-size: 12px; }
+
+/* Switch active: teal for "willing again" */
+.el-switch.is-checked .el-switch__core {
+  background: linear-gradient(135deg, #67D6C2, #3CBFA8) !important;
+  border-color: #3CBFA8 !important;
+}
+.el-switch.is-checked .el-switch__label--right {
+  color: #0c8a7a !important;
+  font-weight: 600;
+}
+.el-switch__label--right {
+  color: #64748b;
+}
 
 .el-descriptions { border-radius: var(--radius-md); overflow: hidden; }
 .el-alert { border-radius: var(--radius-md) !important; }
