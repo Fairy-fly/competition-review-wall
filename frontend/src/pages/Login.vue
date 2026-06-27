@@ -13,7 +13,7 @@
       <!-- Left: Showcase -->
       <section class="login-showcase">
         <div class="showcase-brand">
-          <div class="brand-mark">CW</div>
+          <BrandLogo :size="52" />
           <div class="brand-text">
             <strong>竞赛队友测评墙</strong>
             <span>课程设计 Demo</span>
@@ -104,6 +104,7 @@ import { reactive, ref } from "vue";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 import { Hide, DataAnalysis, Connection, UserFilled, Lock, InfoFilled } from "@element-plus/icons-vue";
+import BrandLogo from "@/components/BrandLogo.vue";
 import { useUserStore } from "@/store/user";
 
 const router = useRouter();
@@ -198,8 +199,8 @@ async function handleLogin() {
 .brand-text strong { font-size: 17px; color: var(--text-main); }
 .brand-text span { font-size: 12px; color: var(--text-faint); }
 
-.showcase-title { margin: 0; font-size: 38px; font-weight: 750; color: var(--text-main); letter-spacing: -1px; line-height: 1.25; }
-.showcase-desc { margin: 18px 0 0; color: var(--text-muted); font-size: 15px; line-height: 1.8; max-width: 480px; }
+.showcase-title { margin: 0; font-size: 52px; font-weight: 720; color: var(--brand-ink); letter-spacing: -1.4px; line-height: 1.2; }
+.showcase-desc { margin: 20px 0 0; color: var(--brand-muted); font-size: 17px; line-height: 1.8; max-width: 500px; }
 
 /* Feature cards */
 .feature-list { display: grid; gap: 12px; margin-top: 32px; }
@@ -228,23 +229,33 @@ async function handleLogin() {
   display: flex; align-items: center; justify-content: center; padding: 44px 48px;
 }
 .login-card {
-  width: 100%; max-width: 380px;
+  width: 100%; max-width: 420px;
   animation: fadeUp 520ms ease both;
 }
-.login-card-head { margin-bottom: 32px; }
-.login-card-head h2 { margin: 0; font-size: 28px; font-weight: 700; color: var(--text-main); letter-spacing: -0.4px; }
-.login-card-head p { margin: 8px 0 0; color: var(--text-muted); font-size: 14px; }
+.login-card-head { margin-bottom: 36px; }
+.login-card-head h2 { margin: 0; font-size: 32px; font-weight: 700; color: var(--brand-ink); letter-spacing: -0.5px; }
+.login-card-head p { margin: 10px 0 0; color: var(--brand-muted); font-size: 15px; }
 
-.input-group { margin-bottom: 18px; }
-.input-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
+.input-group { margin-bottom: 20px; }
+.input-label { display: block; font-size: 13px; font-weight: 600; color: var(--brand-muted); margin-bottom: 6px; }
 
-.login-btn { width: 100%; margin-top: 6px; height: 46px; font-size: 16px; font-weight: 600; border-radius: var(--radius-md) !important; transition: all var(--transition-base); }
-.login-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(79,99,246,0.28); }
-.login-btn:active { transform: translateY(0); }
+.login-btn {
+  width: 100%; margin-top: 8px; height: 50px; font-size: 17px; font-weight: 600;
+  border-radius: var(--radius-md) !important;
+  background: linear-gradient(135deg, #6475FF 0%, #5062F4 100%) !important;
+  border: none !important;
+  box-shadow: 0 10px 24px rgba(91,108,255,0.25);
+  transition: all var(--transition-base);
+}
+.login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 36px rgba(91,108,255,0.35);
+}
+.login-btn:active { transform: translateY(1px); box-shadow: 0 6px 16px rgba(91,108,255,0.20); }
 
-.login-card-foot { text-align: center; margin-top: 16px; font-size: 14px; color: var(--text-muted); }
-.login-card-foot a { color: var(--primary); font-weight: 600; margin-left: 6px; }
-.login-card-note { display: flex; align-items: center; gap: 8px; margin-top: 24px; padding: 12px 16px; border-radius: var(--radius-sm); background: var(--surface-soft); font-size: 13px; color: var(--text-faint); }
+.login-card-foot { text-align: center; margin-top: 18px; font-size: 14px; color: var(--brand-muted); }
+.login-card-foot a { color: var(--brand-primary); font-weight: 600; margin-left: 6px; }
+.login-card-note { display: flex; align-items: center; gap: 8px; margin-top: 24px; padding: 12px 16px; border-radius: var(--radius-sm); background: var(--surface-soft); font-size: 13px; color: var(--brand-faint); }
 
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(18px); }

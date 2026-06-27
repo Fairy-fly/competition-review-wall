@@ -2,7 +2,7 @@
   <div class="app-layout">
     <aside class="app-sidebar desktop-only" :class="{ collapsed: appStore.collapsed }">
       <div class="brand-block">
-        <div class="brand-mark">CW</div>
+        <BrandLogo :size="appStore.collapsed ? 36 : 44" />
         <div v-if="!appStore.collapsed" class="brand-copy">
           <strong>竞赛队友测评墙</strong>
           <span>课程设计 Demo</span>
@@ -12,8 +12,8 @@
       <el-menu
         :default-active="route.path"
         :collapse="appStore.collapsed"
-        background-color="#0f172a"
-        text-color="#cbd5e1"
+        background-color="#0b1220"
+        text-color="#8b99b0"
         active-text-color="#ffffff"
         router
       >
@@ -121,6 +121,7 @@
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
+import BrandLogo from "@/components/BrandLogo.vue";
 import { useAppStore } from "@/store/app";
 import { useUserStore } from "@/store/user";
 
