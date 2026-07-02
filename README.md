@@ -66,7 +66,13 @@ competition-review-wall/
 
 ### 2. 配置后端环境变量
 
-在 `backend/` 下创建或修改 `.env`：
+复制后端环境变量示例：
+
+```bash
+cp backend/.env.example backend/.env
+```
+
+然后根据本地 MySQL 配置修改 `backend/.env`：
 
 ```env
 PORT=3000
@@ -113,12 +119,12 @@ npm run db:init
 
 也可以手动导入：
 
-```sql
-SOURCE backend/sql/schema.sql;
-SOURCE backend/sql/seed.sql;
+```bash
+mysql -u root -p < backend/sql/schema.sql
+mysql -u root -p < backend/sql/seed.sql
 ```
 
-如果在 MySQL 命令行中执行 `SOURCE`，请根据你当前所在目录调整 SQL 文件路径。
+如果你的 MySQL 用户不是 `root`，请替换为自己的用户名。
 
 ### 5. 启动后端
 
@@ -180,18 +186,39 @@ npm run build
 
 更详细的演示脚本见 [docs/DEMO_GUIDE.md](docs/DEMO_GUIDE.md)。
 
-## 截图占位
+## 页面截图
 
-截图后续可放入 `screenshots/`，建议补充：
+以下截图来自本地运行的 demo 数据：
 
-- 首页 / 测评墙
-- 登录注册
-- 竞赛项目列表
-- 提交评价
-- 用户画像
-- 管理员审核后台
+### 登录页
 
-截图清单见 [screenshots/README.md](screenshots/README.md)。
+![登录页](screenshots/login.png)
+
+### 首页 / 测评墙
+
+![首页测评墙](screenshots/home.png)
+
+### 竞赛项目列表
+
+![竞赛项目列表](screenshots/project-list.png)
+
+### 提交匿名评价
+
+![提交评价](screenshots/review-form.png)
+
+### 用户画像
+
+![用户画像](screenshots/profile.png)
+
+### 雷达图画像
+
+![雷达图画像](screenshots/radar-chart.png)
+
+### 管理员评价审核
+
+![管理员评价审核](screenshots/admin-review.png)
+
+截图说明见 [screenshots/README.md](screenshots/README.md)。
 
 ## 核心亮点
 

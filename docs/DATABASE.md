@@ -20,9 +20,9 @@ npm run db:init
 
 也可以在 MySQL 命令行中执行：
 
-```sql
-SOURCE backend/sql/schema.sql;
-SOURCE backend/sql/seed.sql;
+```bash
+mysql -u root -p < backend/sql/schema.sql
+mysql -u root -p < backend/sql/seed.sql
 ```
 
 ## 设计目标

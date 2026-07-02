@@ -1,15 +1,13 @@
-# 截图清单
+# 截图说明
 
-这个目录用于补充课程设计答辩、README 展示和简历项目说明中的截图。
+这个目录用于存放课程设计答辩、README 展示和简历项目说明中的真实页面截图。
 
-建议后续补充以下截图：
+当前截图来自本地运行的 demo 数据。
 
 ## 1. 首页 / 测评墙
 
-建议文件名：
-
 ```text
-home-wall.png
+home.png
 ```
 
 截图重点：
@@ -21,11 +19,8 @@ home-wall.png
 
 ## 2. 登录注册
 
-建议文件名：
-
 ```text
 login.png
-register.png
 ```
 
 截图重点：
@@ -35,8 +30,6 @@ register.png
 - 课程设计 Demo 的品牌入口
 
 ## 3. 竞赛项目列表
-
-建议文件名：
 
 ```text
 project-list.png
@@ -50,10 +43,9 @@ project-list.png
 
 ## 4. 提交评价
 
-建议文件名：
-
 ```text
 review-create.png
+review-form.png
 ```
 
 截图重点：
@@ -65,10 +57,9 @@ review-create.png
 
 ## 5. 用户画像
 
-建议文件名：
-
 ```text
-user-profile.png
+profile.png
+radar-chart.png
 ```
 
 截图重点：
@@ -82,10 +73,9 @@ user-profile.png
 
 ## 6. 管理员审核后台
 
-建议文件名：
-
 ```text
 admin-dashboard.png
+admin-review.png
 ```
 
 截图重点：
@@ -100,7 +90,7 @@ admin-dashboard.png
 后续补好图片后，可在根 README 中加入：
 
 ```md
-![首页测评墙](screenshots/home-wall.png)
-![用户画像](screenshots/user-profile.png)
-![管理员后台](screenshots/admin-dashboard.png)
+![首页测评墙](screenshots/home.png)
+![用户画像](screenshots/profile.png)
+![管理员后台](screenshots/admin-review.png)
 ```
