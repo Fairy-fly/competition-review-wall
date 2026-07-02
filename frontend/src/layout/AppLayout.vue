@@ -5,7 +5,7 @@
         <BrandLogo :size="appStore.collapsed ? 36 : 44" />
         <div v-if="!appStore.collapsed" class="brand-copy">
           <strong>竞赛队友测评墙</strong>
-          <span>课程设计 Demo</span>
+          <span>竞赛协作控制台</span>
         </div>
       </div>
 
@@ -150,7 +150,11 @@ function handleLogout() {
   top: 0;
   bottom: 0;
   z-index: 50;
-  background: var(--sidebar-bg);
+  background:
+    linear-gradient(rgba(75,92,240,0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(75,92,240,0.055) 1px, transparent 1px),
+    linear-gradient(180deg, var(--sidebar-bg-2), var(--sidebar-bg));
+  background-size: 28px 28px, 28px 28px, auto;
   width: var(--sidebar-width);
   transition: width var(--transition-base);
   overflow-y: auto;
@@ -172,9 +176,10 @@ function handleLogout() {
 .app-sidebar :deep(.el-menu-item) {
   color: var(--sidebar-text);
   transition: all var(--transition-base);
-  margin: 2px 8px;
-  border-radius: var(--radius-sm);
+  margin: 4px 10px;
+  border-radius: 14px;
   padding-left: 20px !important;
+  font-weight: 600;
 }
 
 .app-sidebar :deep(.el-menu-item:hover) {
@@ -184,8 +189,8 @@ function handleLogout() {
 
 .app-sidebar :deep(.el-menu-item.is-active) {
   color: #ffffff;
-  background: linear-gradient(90deg, rgba(99,102,241,0.30) 0%, rgba(99,102,241,0.06) 100%);
-  border-left: 3px solid var(--sidebar-active);
+  background: linear-gradient(90deg, rgba(75,92,240,0.62) 0%, rgba(24,169,153,0.20) 100%);
+  box-shadow: inset 3px 0 0 var(--brand-teal), 0 10px 22px rgba(2,6,23,0.18);
 }
 
 .brand-block {
@@ -195,6 +200,20 @@ function handleLogout() {
   padding: 18px 16px;
   color: #fff;
   flex-shrink: 0;
+}
+
+.brand-block::after {
+  content: "";
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(148,163,184,0.28), transparent);
+}
+
+.brand-block {
+  position: relative;
 }
 
 .brand-logo-img {
@@ -256,7 +275,7 @@ function handleLogout() {
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid rgba(148,163,184,0.18);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -292,7 +311,7 @@ function handleLogout() {
 }
 
 .app-content {
-  background: #f3f6fb;
+  background: transparent;
   flex: 1;
   padding-bottom: 0;
 }
@@ -302,9 +321,10 @@ function handleLogout() {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 56px;
-  background: #ffffff;
-  border-top: 1px solid #e5e7eb;
+  min-height: 62px;
+  background: rgba(255,255,255,0.94);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(148,163,184,0.18);
   display: flex;
   z-index: 100;
   padding-bottom: env(safe-area-inset-bottom, 0);
@@ -316,14 +336,18 @@ function handleLogout() {
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  color: #6b7280;
+  color: var(--text-faint);
   font-size: 13px;
-  transition: color 0.15s;
+  transition: color 0.15s, background-color 0.15s;
+  margin: 8px 6px;
+  border-radius: 16px;
 }
 
 .nav-item.active {
-  color: #2563eb;
-  font-weight: 600;
+  color: var(--brand-primary);
+  font-weight: 750;
+  background: var(--primary-soft);
+  box-shadow: inset 0 -2px 0 rgba(75,92,240,0.45);
 }
 
 .nav-label {

@@ -1,13 +1,17 @@
 <template>
   <div class="page-shell motion-page">
     <!-- Profile Hero -->
-    <section class="hero-banner motion-hero">
-      <div class="hero-left">
-        <h1 class="hero-title">{{ userStore.currentUser?.realName || "个人中心" }}</h1>
-        <p class="hero-desc">{{ userStore.currentUser?.college || "" }} · {{ userStore.currentUser?.major || "" }} · {{ userStore.currentUser?.grade || "" }}</p>
+    <section class="hero-banner profile-report-hero motion-hero">
+      <div class="hero-left profile-identity">
+        <div class="profile-avatar">{{ (userStore.currentUser?.realName || "我的").slice(-2) }}</div>
+        <div>
+          <span class="report-kicker">我的协作画像报告</span>
+          <h1 class="hero-title">{{ userStore.currentUser?.realName || "个人中心" }}</h1>
+          <p class="hero-desc">{{ userStore.currentUser?.college || "" }} · {{ userStore.currentUser?.major || "" }} · {{ userStore.currentUser?.grade || "" }}</p>
+        </div>
       </div>
       <div class="hero-right">
-        <div class="hero-preview" style="flex-direction:row;gap:24px;padding:18px 24px">
+        <div class="hero-preview profile-score-strip">
           <div style="text-align:center">
             <div style="font-size:30px;font-weight:700;color:var(--primary)">{{ profile.summary.overallScore || 0 }}</div>
             <div style="font-size:12px;color:var(--text-faint)">综合评分</div>
@@ -17,7 +21,7 @@
             <div style="font-size:12px;color:var(--text-faint)">评价次数</div>
           </div>
           <div style="text-align:center">
-            <div style="font-size:30px;font-weight:700;color:var(--amber)">{{ profile.summary.willingAgainRate || 0 }}%</div>
+            <div style="font-size:30px;font-weight:700;color:var(--teal)">{{ profile.summary.willingAgainRate || 0 }}%</div>
             <div style="font-size:12px;color:var(--text-faint)">再次组队率</div>
           </div>
         </div>
@@ -80,7 +84,7 @@
             <div class="mini-stat-card"><div class="ms-num">{{ profile.summary.overallScore || 0 }}</div><div class="ms-label">综合分</div></div>
             <div class="mini-stat-card"><div class="ms-num" style="color:var(--teal)">{{ profile.summary.reviewCount || 0 }}</div><div class="ms-label">评价次数</div></div>
             <div class="mini-stat-card"><div class="ms-num" style="color:var(--primary)">{{ profile.summary.projectCount || 0 }}</div><div class="ms-label">参与项目</div></div>
-            <div class="mini-stat-card"><div class="ms-num" style="color:var(--amber)">{{ profile.summary.willingAgainRate || 0 }}%</div><div class="ms-label">再次组队率</div></div>
+            <div class="mini-stat-card"><div class="ms-num" style="color:var(--teal)">{{ profile.summary.willingAgainRate || 0 }}%</div><div class="ms-label">再次组队率</div></div>
           </div>
           <div class="section-block">
             <RadarChart :scores="profile.summary" />
@@ -206,11 +210,46 @@ onMounted(async () => { syncForm(); await Promise.all([fetchProfile(), fetchFavo
 }
 .stack-col { display: flex; flex-direction: column; gap: 20px; }
 .hero-banner { display:flex; gap:36px; align-items:center; padding:32px 40px; margin-bottom:24px; background:var(--surface-solid); border:1px solid var(--border-soft); border-radius:var(--radius-xl); box-shadow:var(--shadow-card); }
+.profile-report-hero {
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(75,92,240,0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(75,92,240,0.045) 1px, transparent 1px),
+    linear-gradient(135deg, #ffffff, #f7fbff);
+  background-size: 28px 28px, 28px 28px, auto;
+}
 .hero-left { flex:1; }
+.profile-identity { display:flex; align-items:center; gap:16px; min-width:0; }
+.profile-avatar {
+  width:68px;
+  height:68px;
+  border-radius:22px;
+  display:grid;
+  place-items:center;
+  color:#fff;
+  font-weight:800;
+  background:linear-gradient(135deg,var(--brand-primary),#6876ff);
+  box-shadow:0 14px 28px rgba(75,92,240,0.20);
+  flex-shrink:0;
+}
+.report-kicker {
+  display:inline-flex;
+  align-items:center;
+  min-height:26px;
+  padding:0 10px;
+  border-radius:999px;
+  color:var(--brand-teal-deep);
+  background:var(--brand-teal-soft);
+  border:1px solid rgba(24,169,153,0.18);
+  font-size:12px;
+  font-weight:750;
+  margin-bottom:8px;
+}
 .hero-right { min-width:300px; }
 .hero-title { margin:0; font-size:30px; font-weight:750; color:var(--text-main); }
 .hero-desc { margin:8px 0 0; color:var(--text-muted); font-size:15px; }
 .hero-preview { padding:14px 20px; border:1px solid var(--border-soft); border-radius:var(--radius-lg); background:var(--surface-soft); display:flex; align-items:center; justify-content:space-around; }
+.profile-score-strip { flex-direction:row; gap:24px; padding:18px 24px; background:rgba(255,255,255,0.82); }
 .mini-stat-card { background:var(--surface-soft); border:1px solid var(--border-soft); border-radius:var(--radius-md); padding:14px; text-align:center; transition:all var(--transition-base); }
 .mini-stat-card:hover { box-shadow:var(--shadow-sm); transform:translateY(-2px); }
 .ms-num { font-size:26px; font-weight:700; color:var(--text-main); }
@@ -230,5 +269,9 @@ onMounted(async () => { syncForm(); await Promise.all([fetchProfile(), fetchFavo
 @media (max-width: 900px) {
   .profile-stack { grid-template-columns: 1fr; }
   .stack-right { order: -1; }
+  .hero-banner { flex-direction:column; align-items:stretch; padding:24px; }
+  .hero-right { min-width:0; }
+  .profile-score-strip { flex-wrap:wrap; }
+  .profile-score-strip > div { flex:1 1 90px; }
 }
 </style>

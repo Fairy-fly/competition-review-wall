@@ -318,7 +318,21 @@ onMounted(fetchDetail);
 </script>
 
 <style scoped>
-.project-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.project-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 24px;
+  border: 1px solid rgba(75,92,240,0.14);
+  border-radius: var(--radius-xl);
+  background:
+    linear-gradient(rgba(75,92,240,0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(75,92,240,0.045) 1px, transparent 1px),
+    var(--surface-solid);
+  background-size: 28px 28px;
+  box-shadow: var(--shadow-card);
+}
 .head-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
 .status-note { margin: 6px 0 12px; }
 .status-actions { margin-top: 14px; }
@@ -384,19 +398,38 @@ onMounted(fetchDetail);
 .flow-list {
   margin: 0;
   padding-left: 20px;
-  color: var(--color-text-secondary);
+  color: var(--text-muted);
   line-height: 2.2;
-  font-size: var(--font-size-base);
+  font-size: 14px;
 }
 
 .flow-list li.active {
-  color: var(--color-brand);
+  color: var(--brand-primary);
   font-weight: 650;
 }
 
 .empty-placeholder {
   padding: 36px 12px;
   text-align: center;
-  color: var(--color-text-muted);
+  color: var(--text-faint);
+}
+
+@media (max-width: 760px) {
+  .project-head {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .head-actions {
+    width: 100%;
+  }
+
+  .head-actions > * {
+    flex: 1 1 auto;
+  }
+
+  .progress-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

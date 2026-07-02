@@ -1,11 +1,5 @@
 <template>
   <div class="register-page">
-    <div class="reg-ambient">
-      <div class="ra-orb ra-orb-1"></div>
-      <div class="ra-orb ra-orb-2"></div>
-      <div class="ra-orb ra-orb-3"></div>
-    </div>
-
     <div class="reg-shell">
       <!-- Left: Brand -->
       <section class="reg-hero">
@@ -86,14 +80,12 @@ async function handleRegister() {
 </script>
 
 <style scoped>
-.register-page { min-height:100dvh; height:100dvh; display:flex; position:relative; overflow:hidden; background: radial-gradient(ellipse 70% 50% at 12% 20%, rgba(91,108,255,0.08) 0%, transparent 50%), radial-gradient(ellipse 60% 40% at 85% 75%, rgba(24,169,153,0.05) 0%, transparent 50%), linear-gradient(155deg, #f7f9ff 0%, #eef4fc 45%, #f8fbff 100%); }
-.reg-ambient { position:absolute; inset:0; pointer-events:none; z-index:0; }
-.ra-orb { position:absolute; border-radius:50%; filter:blur(120px); }
-.ra-orb-1 { width:460px; height:460px; background:rgba(91,108,255,0.05); top:-10%; left:-4%; animation:driftA 16s ease-in-out infinite; }
-.ra-orb-2 { width:340px; height:340px; background:rgba(24,169,153,0.04); bottom:8%; right:-6%; animation:driftB 18s ease-in-out infinite; }
-.ra-orb-3 { width:240px; height:240px; background:rgba(91,108,255,0.03); top:50%; left:60%; animation:driftA 20s ease-in-out infinite reverse; }
-@keyframes driftA { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(24px,-16px) scale(1.04)} 66%{transform:translate(-18px,14px) scale(0.96)} }
-@keyframes driftB { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-22px,20px) scale(1.05)} }
+.register-page { min-height:100dvh; height:100dvh; display:flex; position:relative; overflow:hidden; background:
+  linear-gradient(rgba(75,92,240,0.045) 1px, transparent 1px),
+  linear-gradient(90deg, rgba(75,92,240,0.035) 1px, transparent 1px),
+  linear-gradient(155deg, #f7f9ff 0%, #eef4fc 45%, #f8fbff 100%);
+  background-size:30px 30px,30px 30px,auto;
+}
 
 .reg-shell { display:flex; flex:1; position:relative; z-index:1; }
 .reg-hero { flex:48; display:flex; align-items:center; padding:clamp(32px,5vw,56px) clamp(40px,6vw,80px); }
@@ -126,6 +118,19 @@ async function handleRegister() {
 .reg-foot { text-align:center; margin-top:18px; font-size:14px; color:var(--brand-muted); }
 .reg-foot a { color:var(--brand-primary); font-weight:600; margin-left:5px; }
 
-@media (max-width:860px) { .register-page { flex-direction:column; height:auto; min-height:auto; } .reg-hero { flex:auto; padding:36px 28px 20px; } .reg-hero::after { display:none; } .reg-panel { flex:auto; padding:16px 24px 40px; } .reg-card { max-width:100%; } }
-@media (prefers-reduced-motion:reduce) { .ra-orb,.reg-card { animation:none !important; } }
+@media (max-width:860px) {
+  .register-page { height:auto; min-height:100dvh; overflow:auto; }
+  .reg-shell { flex-direction:column; width:100%; min-height:100dvh; }
+  .reg-hero { flex:none; padding:28px 24px 10px; }
+  .reg-hero::after { display:none; }
+  .reg-brand { margin-bottom:18px; }
+  .reg-headline { font-size:32px; }
+  .reg-desc { margin-top:10px; font-size:14px; }
+  .reg-features { margin-top:16px; }
+  .reg-panel { flex:none; padding:12px 18px 34px; }
+  .reg-card { max-width:100%; padding:24px 18px; }
+  .reg-row { flex-direction:column; gap:0; }
+  .reg-row .el-form-item { margin-bottom:14px; }
+}
+@media (prefers-reduced-motion:reduce) { .reg-card { animation:none !important; } }
 </style>

@@ -6,7 +6,7 @@
   "scripts": {
     "db:init": "node src/scripts/initDb.js",
     "dev": "node --watch src/server.js",
-    "start": "NODE_ENV=production node src/server.js"
+    "start": "node src/server.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
