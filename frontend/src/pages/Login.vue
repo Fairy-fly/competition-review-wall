@@ -1,12 +1,5 @@
 <template>
   <div class="login-page">
-    <!-- Ambient orbs -->
-    <div class="amb-orbs">
-      <div class="amb-orb ao-1"></div>
-      <div class="amb-orb ao-2"></div>
-      <div class="amb-orb ao-3"></div>
-    </div>
-
     <!-- Network background SVG -->
     <svg class="login-network" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
       <line x1="80" y1="140" x2="340" y2="180" stroke="rgba(91,108,255,0.06)" stroke-width="1"/>
@@ -144,19 +137,11 @@ async function handleLogin() {
   position: relative;
   overflow: hidden;
   background:
-    radial-gradient(ellipse 70% 50% at 12% 20%, rgba(75,92,240,0.09) 0%, transparent 50%),
-    radial-gradient(ellipse 60% 40% at 85% 75%, rgba(24,169,153,0.06) 0%, transparent 50%),
+    linear-gradient(rgba(75,92,240,0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(75,92,240,0.035) 1px, transparent 1px),
     linear-gradient(155deg, #f7f9ff 0%, #eef4fc 45%, #f8fbff 100%);
+  background-size: 30px 30px, 30px 30px, auto;
 }
-
-/* ---- Ambient orbs ---- */
-.amb-orbs { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
-.amb-orb { position: absolute; border-radius: 50%; filter: blur(120px); }
-.ao-1 { width: 460px; height: 460px; background: rgba(75,92,240,0.05); top: -10%; left: -4%; animation: driftA 16s ease-in-out infinite; }
-.ao-2 { width: 340px; height: 340px; background: rgba(24,169,153,0.04); bottom: 8%; right: -6%; animation: driftB 18s ease-in-out infinite; }
-.ao-3 { width: 240px; height: 240px; background: rgba(75,92,240,0.03); top: 50%; left: 60%; animation: driftA 20s ease-in-out infinite reverse; }
-@keyframes driftA { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(24px,-16px) scale(1.04)} 66%{transform:translate(-18px,14px) scale(0.96)} }
-@keyframes driftB { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-22px,20px) scale(1.05)} }
 
 /* ===== Network background ===== */
 .login-network { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: 0.55; }
@@ -303,6 +288,6 @@ async function handleLogin() {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .amb-orb, .nn, .hf-card, .panel-glass { animation: none !important; }
+  .nn, .hf-card, .panel-glass { animation: none !important; }
 }
 </style>

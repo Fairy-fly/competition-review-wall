@@ -1,12 +1,16 @@
 <template>
   <div class="page-shell">
-    <header class="page-header profile-head">
-      <div>
-        <h1 class="page-title">{{ profile.user?.realName || "队友画像" }}</h1>
-        <p class="page-subtitle">
-          {{ profile.user?.college || "未填写学院" }} · {{ profile.user?.major || "未填写专业" }} ·
-          {{ profile.user?.skillDirection || "未填写技能方向" }}
-        </p>
+    <header class="page-header profile-head report-head">
+      <div class="report-identity">
+        <div class="report-avatar">{{ (profile.user?.realName || "队友").slice(-2) }}</div>
+        <div>
+          <span class="report-kicker">协作画像报告</span>
+          <h1 class="page-title">{{ profile.user?.realName || "队友画像" }}</h1>
+          <p class="page-subtitle">
+            {{ profile.user?.college || "未填写学院" }} · {{ profile.user?.major || "未填写专业" }} ·
+            {{ profile.user?.skillDirection || "未填写技能方向" }}
+          </p>
+        </div>
       </div>
       <div class="head-actions">
         <el-button @click="router.back()">返回上一页</el-button>
@@ -27,10 +31,10 @@
     <div class="two-col-grid">
       <section class="section-surface">
         <div class="stat-grid">
-          <ScoreCard label="综合分" :value="profile.summary.overallScore || 0" />
-          <ScoreCard label="评价次数" :value="profile.summary.reviewCount || 0" accent="#0f766e" />
-          <ScoreCard label="参与项目数" :value="profile.summary.projectCount || 0" accent="#7c3aed" />
-          <ScoreCard label="再次组队率" :value="`${profile.summary.willingAgainRate || 0}%`" accent="#ea580c" />
+          <ScoreCard label="综合评分" :value="profile.summary.overallScore || 0" />
+          <ScoreCard label="评价次数" :value="profile.summary.reviewCount || 0" accent="#D9913B" />
+          <ScoreCard label="参与项目" :value="profile.summary.projectCount || 0" accent="#4B5CF0" />
+          <ScoreCard label="再次组队率" :value="`${profile.summary.willingAgainRate || 0}%`" accent="#18A999" />
         </div>
 
         <div class="section-block">
@@ -330,6 +334,54 @@ onMounted(async () => {
   gap: 16px;
 }
 
+.report-head {
+  position: relative;
+  overflow: hidden;
+  padding: 26px;
+  border: 1px solid rgba(75,92,240,0.14);
+  border-radius: var(--radius-xl);
+  background:
+    linear-gradient(rgba(75,92,240,0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(75,92,240,0.045) 1px, transparent 1px),
+    var(--surface-solid);
+  background-size: 28px 28px;
+  box-shadow: var(--shadow-card);
+}
+
+.report-identity {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.report-avatar {
+  width: 68px;
+  height: 68px;
+  border-radius: 22px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--brand-primary), #6876ff);
+  box-shadow: 0 14px 28px rgba(75,92,240,0.20);
+  flex-shrink: 0;
+}
+
+.report-kicker {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  color: var(--brand-teal-deep);
+  background: var(--brand-teal-soft);
+  border: 1px solid rgba(24,169,153,0.18);
+  font-size: 12px;
+  font-weight: 750;
+  margin-bottom: 8px;
+}
+
 .head-actions {
   display: flex;
   flex-wrap: wrap;
@@ -348,9 +400,9 @@ onMounted(async () => {
 
 .mini-row {
   width: 100%;
-  border: 1px solid var(--color-border-light);
+  border: 1px solid var(--border-soft);
   border-radius: var(--radius-sm);
-  background: var(--color-surface);
+  background: var(--surface-solid);
   padding: 10px 14px;
   display: flex;
   align-items: center;
@@ -362,29 +414,29 @@ onMounted(async () => {
 }
 
 .mini-row:hover {
-  border-color: var(--color-brand);
+  border-color: var(--brand-primary);
 }
 
 .mini-row strong {
   display: block;
-  font-size: var(--font-size-base);
-  color: var(--color-text-primary);
+  font-size: 14px;
+  color: var(--text-main);
   font-weight: 600;
 }
 
 .mini-row small {
   display: block;
   margin-top: 2px;
-  color: var(--color-text-muted);
-  font-size: var(--font-size-xs);
+  color: var(--text-faint);
+  font-size: 12px;
 }
 
 .explain-list {
   margin: 0;
   padding-left: 18px;
-  color: var(--color-text-secondary);
+  color: var(--text-muted);
   line-height: 2;
-  font-size: var(--font-size-base);
+  font-size: 14px;
 }
 
 .role-list {
@@ -393,9 +445,9 @@ onMounted(async () => {
 }
 
 .role-chip {
-  border: 1px solid var(--color-brand-light);
+  border: 1px solid rgba(75,92,240,0.16);
   border-radius: var(--radius-sm);
-  background: var(--color-brand-light);
+  background: var(--primary-soft);
   padding: 10px 14px;
   display: flex;
   flex-direction: column;
@@ -404,19 +456,35 @@ onMounted(async () => {
 
 .role-name {
   font-weight: 600;
-  color: var(--color-brand-dark);
-  font-size: var(--font-size-base);
+  color: var(--brand-primary-deep);
+  font-size: 14px;
 }
 
 .role-reason {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-xs);
+  color: var(--text-faint);
+  font-size: 12px;
 }
 
 .empty-placeholder {
   padding: 36px 12px;
   text-align: center;
-  color: var(--color-text-muted);
-  font-size: var(--font-size-base);
+  color: var(--text-faint);
+  font-size: 14px;
+}
+
+@media (max-width: 760px) {
+  .report-head {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .head-actions {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .head-actions > * {
+    flex: 1 1 auto;
+  }
 }
 </style>

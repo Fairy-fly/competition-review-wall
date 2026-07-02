@@ -1,4 +1,4 @@
-/* ===== 竞赛队友测评墙 · Brand Design System ===== */
+/* ===== 竞赛队友测评墙 · Campus Portrait Wall Design System ===== */
 
 :root {
   /* ---- Brand Palette ---- */
@@ -16,6 +16,16 @@
   --brand-rose:          #E56B7A;
   --brand-rose-soft:     #FFE7EB;
 
+  /* ---- Semantic Palette ---- */
+  --semantic-trust:      var(--brand-teal);
+  --semantic-trust-soft: var(--brand-teal-soft);
+  --semantic-pending:    var(--brand-amber);
+  --semantic-pending-soft: var(--brand-amber-soft);
+  --semantic-risk:       var(--brand-rose);
+  --semantic-risk-soft:  var(--brand-rose-soft);
+  --semantic-campus:     #38BDF8;
+  --semantic-campus-soft: #E0F2FE;
+
   /* ---- Text ---- */
   --brand-ink:           #0F172A;
   --brand-ink-soft:      #334155;
@@ -27,6 +37,8 @@
   --surface-solid:       #FFFFFF;
   --surface-soft:        #F8FAFC;
   --surface-border:      #D9E2F0;
+  --surface-card:        #FFFFFF;
+  --surface-toolbar:     rgba(255,255,255,0.76);
 
   /* ---- Backwards-compat aliases ---- */
   --app-bg:          var(--page-bg);
@@ -48,7 +60,7 @@
 
   /* ---- Shadows ---- */
   --shadow-card:      0 16px 40px rgba(15, 23, 42, 0.06);
-  --shadow-hover:     0 22px 60px rgba(15, 23, 42, 0.11);
+  --shadow-hover:     0 20px 46px rgba(15, 23, 42, 0.10);
   --shadow-sm:        0 1px 3px rgba(15, 23, 42, 0.05);
   --shadow-xs:        0 1px 2px rgba(15, 23, 42, 0.03);
   --shadow-btn:       0 10px 24px rgba(91, 108, 255, 0.22);
@@ -64,6 +76,7 @@
   --sidebar-width:      220px;
   --sidebar-collapsed:  72px;
   --sidebar-bg:         #0B1220;
+  --sidebar-bg-2:       #111B31;
   --sidebar-text:       #8B99B0;
   --sidebar-active:     #4B5CF0;
   --sidebar-hover:      rgba(255,255,255,0.05);
@@ -78,9 +91,12 @@
 /* ---- Page Background ---- */
 body {
   background:
+    linear-gradient(rgba(75,92,240,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(75,92,240,0.028) 1px, transparent 1px),
     radial-gradient(ellipse 70% 40% at 18% 5%, rgba(75,92,240,0.05) 0%, transparent 55%),
     radial-gradient(ellipse 55% 35% at 88% 25%, rgba(24,169,153,0.04) 0%, transparent 50%),
     var(--page-bg);
+  background-size: 32px 32px, 32px 32px, auto, auto, auto;
   background-attachment: fixed;
 }
 
@@ -101,7 +117,7 @@ body {
 .motion-page   { animation: fadeUp 400ms ease both; }
 .motion-hero   { animation: fadeUp 460ms ease both; }
 .motion-card   { animation: fadeUp 400ms ease both; transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease; }
-.motion-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); border-color: var(--brand-primary); }
+.motion-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); border-color: rgba(75,92,240,0.28); }
 .motion-float  { animation: softFloat 3.4s ease-in-out infinite; }
 
 .motion-stagger > * { opacity: 0; animation: fadeUp 380ms ease forwards; }
@@ -139,6 +155,20 @@ body {
   border: none !important;
   box-shadow: 0 12px 28px rgba(79,91,232,0.20);
   border-radius: 14px !important;
+}
+
+.el-button--success {
+  --el-button-bg-color: var(--brand-teal);
+  --el-button-border-color: var(--brand-teal);
+  --el-button-hover-bg-color: var(--brand-teal-deep);
+  --el-button-hover-border-color: var(--brand-teal-deep);
+}
+
+.el-button--warning {
+  --el-button-bg-color: var(--brand-amber);
+  --el-button-border-color: var(--brand-amber);
+  --el-button-hover-bg-color: #B96D12;
+  --el-button-hover-border-color: #B96D12;
 }
 .el-button--primary:hover {
   filter: brightness(1.03);
@@ -201,7 +231,25 @@ body {
 .el-dialog { border-radius: var(--radius-lg) !important; box-shadow: var(--shadow-hover) !important; }
 .el-progress-bar__outer { background: #e2e8f0; border-radius: 8px; }
 .el-progress-bar__inner { border-radius: 8px; }
-.el-tag { border-radius: 20px; font-weight: 500; font-size: 12px; }
+.el-tag { border-radius: 20px; font-weight: 600; font-size: 12px; }
+
+.el-tag.el-tag--success {
+  --el-tag-bg-color: var(--brand-teal-soft);
+  --el-tag-border-color: rgba(24,169,153,0.20);
+  --el-tag-text-color: var(--brand-teal-deep);
+}
+
+.el-tag.el-tag--warning {
+  --el-tag-bg-color: var(--brand-amber-soft);
+  --el-tag-border-color: rgba(217,145,59,0.24);
+  --el-tag-text-color: #9A641E;
+}
+
+.el-tag.el-tag--danger {
+  --el-tag-bg-color: var(--brand-rose-soft);
+  --el-tag-border-color: rgba(229,107,122,0.24);
+  --el-tag-text-color: #B8354A;
+}
 
 /* Switch active: teal for "willing again" */
 .el-switch.is-checked .el-switch__core {
